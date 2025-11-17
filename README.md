@@ -330,11 +330,6 @@ This project is proprietary and confidential. All rights reserved by First Thoug
 **Brand:** Vardan Naturals
 **Fonts:** Cormorant Garamond (Google Fonts)
 
-## 📧 Support
-
-For technical support or inquiries:
-- Email: info@vardannaturals.com
-- Phone: +91 807 777 5729
 
 ---
 
