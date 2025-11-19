@@ -44,6 +44,7 @@
       </li>
       <li><a href="#about">About</a></li>
       <li><a href="#contact">Contact</a></li>
+      <li><a href="cart.html" class="cart-link-nav">🛒 Cart (<span id="navCartCount">0</span>)</a></li>
     </ul>
   </nav>
 </header>
@@ -107,6 +108,10 @@
           <li>Use twice daily or as directed</li>
         </ul>
         <div class="product-price">₹499 (100ml) | ₹799 (200ml)</div>
+        <!-- Add to Cart Button -->
+        <button class="btn-primary" onclick="addToCart('Mahanarayana Tailam', '₹499', '100ml', 'images/mahanarayana-tailam.jpg')">
+          🛒 Add to Cart
+        </button>
       </div>
     </div>
 
@@ -131,6 +136,15 @@
           <li>Made from ten powerful roots</li>
         </ul>
         <div class="product-price">₹499 (100ml) | ₹799 (200ml)</div>
+        <div style="display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 1rem;">
+          <button class="btn" onclick="addToCart('Lip Balm', '₹249', 'Rose')">
+            🛒 Add to Cart 100 ml
+          </button>
+
+          <button class="btn" onclick="addToCart('Lip Balm', '₹249', 'Green Apple')">
+            🛒 Add to Cart 200 ml
+          </button>
+        </div>
       </div>
     </div>
 
@@ -571,8 +585,8 @@
         </ul>
         <div class="product-price">₹399 (10ml)</div>
       </div>
+      </div>
     </div>
-  </div>
 
   <!-- Wellness Roll-Ons & Specialty Care -->
   <div class="category" id="wellness">
@@ -1020,6 +1034,7 @@
 <!-- Scripts -->
 <script src="js/carousel.js"></script>
 <script src="js/dropdown.js"></script>
+<script src="js/cart.js" defer></script>
 
 </body>
 </html>
