@@ -611,20 +611,23 @@
         <div class="image-carousel" id="lipBalm-carousel">
           <div class="carousel-images">
             <div class="carousel-slide">
-              <img alt="Rose Lip Balm" src="images/lip-balm-rose.jpg"/>
+              <img alt="Rose Lip Balm" src="images/lip-balm-rose.jpg">
             </div>
             <div class="carousel-slide">
-              <img alt="Green Apple Lip Balm" src="images/lip-balm-green-apple.jpg"/>
+              <img alt="Green Apple Lip Balm" src="images/lip-balm-green-apple.jpg">
             </div>
           </div>
+
           <button class="carousel-btn prev" onclick="move('lipBalm-carousel', -1)">‹</button>
           <button class="carousel-btn next" onclick="move('lipBalm-carousel', 1)">›</button>
+
           <div class="carousel-indicators">
             <button class="carousel-indicator active" onclick="goToSlide('lipBalm-carousel', 0)"></button>
             <button class="carousel-indicator" onclick="goToSlide('lipBalm-carousel', 1)"></button>
           </div>
         </div>
       </div>
+
       <div class="product-details">
         <div class="product-name">Lip Balms</div>
         <p class="product-description">Rose and Green Apple variants. Nourishing care for soft, smooth lips.</p>
@@ -633,9 +636,35 @@
           <li>Nourishes and protects lips</li>
           <li>Natural ingredients</li>
         </ul>
-        <div class="product-price">₹249 each (15g)</div><div style="margin-top: 1rem; display:flex; flex-direction:column; gap:0.5rem;"><select class="variant-select" id="variant-lipbalm-1"><option data-image="images/lip-balm-rose.jpg" data-price="₹249" value="Rose (15g)">Rose (15g) — ₹249</option><option data-image="images/lip-balm-green-apple.jpg" data-price="₹249" value="Green Apple (15g)">Green Apple (15g) — ₹249</option></select><button class="btn-primary add-to-cart-btn" data-name="Lip Balms" data-variant-selector="#variant-lipbalm-1">🛒 Add to Cart</button></div>
+        <div class="product-price">₹249 each (15g)</div>
+
+        <!-- VARIANT SELECT + BUTTON -->
+        <div style="margin-top: 1rem; display:flex; flex-direction:column; gap:0.5rem;">
+          <select id="lipbalm-variant" class="variant-select">
+            <option value="Rose (15g)"
+                    data-price="₹249"
+                    data-image="images/lip-balm-rose.jpg">
+              Rose (15g) — ₹249
+            </option>
+
+            <option value="Green Apple (15g)"
+                    data-price="₹249"
+                    data-image="images/lip-balm-green-apple.jpg">
+              Green Apple (15g) — ₹249
+            </option>
+          </select>
+
+          <button
+            class="btn-primary add-to-cart-btn"
+            data-name="Lip Balm"
+            data-image="images/lip-balm-rose.jpg"
+            data-variant-selector="#lipbalm-variant">
+            🛒 Add to Cart
+          </button>
+        </div>
       </div>
     </div>
+
     <div class="product-item">
       <div class="product-image">
         <div class="image-carousel" id="sachets-carousel">
