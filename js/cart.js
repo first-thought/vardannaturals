@@ -1,4 +1,10 @@
-// js/cart.js - Enhanced Cart for Separate Page
+// js/cart.updated.js - Cart with variant-select support (generated)
+/* Enhanced cart.updated.js supporting:
+ - data-variant-selector (CSS selector for select)
+ - option[data-price] for variant price
+ - generic add-to-cart buttons (.add-to-cart-btn)
+ - migration of inline addToCart(...) onclicks
+*/
 
 let cart = [];
 
@@ -6,7 +12,12 @@ let cart = [];
 function loadCart() {
   const savedCart = localStorage.getItem('vardanCart');
   if (savedCart) {
-    cart = JSON.parse(savedCart);
+    try {
+      cart = JSON.parse(savedCart);
+    } catch (e) {
+      console.warn('Failed to parse vardanCart', e);
+      cart = [];
+    }
   }
   updateCartCount();
   return cart;
@@ -14,13 +25,17 @@ function loadCart() {
 
 // Save cart to localStorage
 function saveCart() {
-  localStorage.setItem('vardanCart', JSON.stringify(cart));
+  try {
+    localStorage.setItem('vardanCart', JSON.stringify(cart));
+  } catch (e) {
+    console.warn('Failed to save cart', e);
+  }
   updateCartCount();
 }
 
-// Add to Cart
+// Add to Cart (unchanged signature for compatibility)
 function addToCart(productName, price, variant = '', imageSrc = '') {
-  const numPrice = parseFloat(price.replace(/[^0-9.]/g, ''));
+  const numPrice = parseFloat(String(price).replace(/[^0-9.]/g, '')) || 0;
 
   const existingIndex = cart.findIndex(item =>
     item.name === productName && item.variant === variant
@@ -224,5 +239,184 @@ function showNotification(message) {
   }, 2500);
 }
 
+/* -------------------------
+   Generic add-to-cart enhancements
+   ------------------------- */
+
+/**
+ * handleAddToCartClick
+ * Reads data-* attributes from a clicked button and delegates to addToCart()
+ * Supports:
+ * - data-name (product name)
+ * - data-price (display price text, e.g. "₹499")
+ * - data-variant (e.g. "100ml")
+ * - data-image (image URL)
+ * - data-qty (optional number)
+ * - data-variant-selector (optional CSS selector to pick a variant value)
+ * - data-qty-selector (optional CSS selector to pick quantity)
+ */
+function handleAddToCartClick(e) {
+  const btn = e.currentTarget || (e.target && e.target.closest && e.target.closest('.add-to-cart-btn')) || e.target;
+  if (!btn) return;
+
+  let name = (btn.dataset.name || btn.getAttribute('data-name') || '').trim();
+  let priceText = (btn.dataset.price || btn.getAttribute('data-price') || '₹0').trim();
+  let variant = (btn.dataset.variant || btn.getAttribute('data-variant') || '').trim();
+  const image = (btn.dataset.image || btn.getAttribute('data-image') || '').trim();
+
+  // quantity via data-qty or selector
+  let qty = parseInt(btn.dataset.qty || btn.getAttribute('data-qty') || '1', 10) || 1;
+  if (btn.dataset.qtySelector) {
+    const qEl = document.querySelector(btn.dataset.qtySelector);
+    if (qEl) {
+      const parsed = parseInt(qEl.value || qEl.getAttribute('value') || '1', 10);
+      if (!isNaN(parsed) && parsed > 0) qty = parsed;
+    }
+  }
+
+  // variant selector support (if you want a select to control variant)
+  if (btn.dataset.variantSelector) {
+    const sel = document.querySelector(btn.dataset.variantSelector);
+    if (sel) {
+      const selectedOption = sel.options[sel.selectedIndex];
+      variant = selectedOption ? (selectedOption.value || selectedOption.text) : variant;
+      // prefer option[data-price] if present
+      const optPrice = selectedOption ? selectedOption.getAttribute('data-price') : null;
+      if (optPrice) priceText = optPrice;
+    }
+  }
+
+  if (!name) {
+    console.warn('Add to cart: product name missing on button', btn);
+  }
+
+  for (let i = 0; i < qty; i++) {
+    addToCart(name, priceText, variant, image);
+  }
+}
+
+/**
+ * initGenericAddToCart
+ * Attach click listeners to .add-to-cart-btn buttons (idempotent)
+ */
+function initGenericAddToCart(root = document) {
+  const buttons = root.querySelectorAll('.add-to-cart-btn');
+  buttons.forEach(btn => {
+    if (!btn.dataset.bound) {
+      btn.addEventListener('click', handleAddToCartClick);
+      btn.dataset.bound = 'true';
+    }
+  });
+}
+
+/**
+ * initAddToCartDelegation
+ * Optional delegation-based approach (useful for dynamically injected product lists)
+ */
+function initAddToCartDelegation(container = document) {
+  container.addEventListener('click', function (e) {
+    const btn = e.target.closest && e.target.closest('.add-to-cart-btn');
+    if (!btn) return;
+    handleAddToCartClick({ currentTarget: btn });
+  });
+}
+
+/* -------------------------
+   Migration helper: convert inline onclick="addToCart(...)" calls to data-* attributes
+   This helps you keep using the HTML as-is and migrate progressively.
+   ------------------------- */
+
+/**
+ * migrateInlineAddToCart
+ * Finds elements with onclick attributes calling addToCart(...) and converts them
+ * to data-* attributes, then removes the onclick attribute.
+ *
+ * Supports patterns like:
+ *   addToCart('Name', '₹499', '100ml', 'images/foo.jpg')
+ *   addToCart("Name", "₹499", "100ml", "images/foo.jpg")
+ *
+ * It is conservative — if parsing fails it leaves the element unchanged.
+ */
+function migrateInlineAddToCart(root = document) {
+  const nodes = root.querySelectorAll('[onclick]');
+  const regex = /addToCart\s*\(\s*(['"])(.*?)\1\s*,\s*(['"])(.*?)\3\s*(?:,\s*(['"])(.*?)\5\s*(?:,\s*(['"])(.*?)\7\s*)?)?\)/;
+
+  nodes.forEach(node => {
+    const onclickValue = node.getAttribute('onclick');
+    if (!onclickValue) return;
+    const match = onclickValue.match(regex);
+    if (!match) return;
+
+    // match groups:
+    // match[2] => productName
+    // match[4] => price
+    // match[6] => variant (optional)
+    // match[8] => image (optional)
+    const productName = match[2] || '';
+    const priceText = match[4] || '';
+    const variant = match[6] || '';
+    const image = match[8] || '';
+
+    // set data attributes
+    try {
+      node.dataset.name = productName;
+      node.dataset.price = priceText;
+      if (variant) node.dataset.variant = variant;
+      if (image) node.dataset.image = image;
+
+    } catch (err) {
+      console.warn('Failed to migrate onclick to data-* for element', node, err);
+    }});
+}
+
+// Notification styles (only once)
+(function appendNotificationStyles() {
+  if (document.getElementById('cart-notification-styles')) return;
+  const style = document.createElement('style');
+  style.id = 'cart-notification-styles';
+  style.textContent = `
+      @keyframes slideIn {
+        from { transform: translateX(400px); opacity: 0; }
+        to { transform: translateX(0); opacity: 1; }
+      }
+      @keyframes slideOut {
+        from { transform: translateX(0); opacity: 1; }
+        to { transform: translateX(400px); opacity: 0; }
+      }
+    `;
+  document.head.appendChild(style);
+})();
+
+// Outside click to close cart (kept simple)
+function setupOutsideClickClose() {
+  document.addEventListener('click', function (e) {
+    const cartSidebar = document.getElementById('cartSidebar');
+    const cartIcon = document.querySelector('.cart-icon-container');
+
+    if (!cartSidebar || !cartIcon) return;
+
+    if (cartSidebar.classList.contains('open') &&
+      !cartSidebar.contains(e.target) &&
+      !cartIcon.contains(e.target)) {
+      cartSidebar.classList.remove('open');
+    }
+  });
+}
+
 // Initialize
-loadCart();
+function initCartSystem() {
+  loadCart();
+  setupOutsideClickClose();
+
+  // migrate inline onclicks (conservative)
+  migrateInlineAddToCart(document);
+
+  // bind add-to-cart buttons
+  initGenericAddToCart(document);
+
+  // if dynamic products exist, you can enable delegation:
+  // const productsRoot = document.querySelector('#products') || document;
+  // initAddToCartDelegation(productsRoot);
+}
+
+document.addEventListener('DOMContentLoaded', initCartSystem);
