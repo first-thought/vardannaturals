@@ -1,5 +1,5 @@
 /* ===================================
-   CATEGORY.CSS - All Category Related Styles
+   CATEGORY.CSS - Modern Category & Product Layouts
    =================================== */
 
 /* ----- FULL CATEGORY CARDS (for products.html page) ----- */
@@ -447,116 +447,151 @@
 }
 
 
-/* ----- PRODUCT ITEMS ON CATEGORY PAGES ----- */
+/* ----- PRODUCT ITEMS - MODERN CARD LAYOUT ----- */
 
 .products-container {
   margin-top: 3rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 2.5rem;
 }
 
 .products-container .product-item {
-  display: grid;
-  grid-template-columns: 350px 1fr;
-  gap: 3rem;
-  padding: 2.5rem;
   background: white;
   border-radius: 20px;
-  margin-bottom: 2rem;
+  overflow: hidden;
   border: 2px solid #e8e5e0;
-  transition: all 0.3s ease;
+  transition: all 0.4s ease;
+  display: flex;
+  flex-direction: column;
+  position: relative;
 }
 
 .products-container .product-item:hover {
   border-color: #2c5f2d;
-  box-shadow: 0 8px 25px rgba(44, 95, 45, 0.1);
-  transform: translateY(-3px);
+  box-shadow: 0 12px 40px rgba(44, 95, 45, 0.15);
+  transform: translateY(-8px);
 }
 
+/* Product Image */
 .products-container .product-image {
   width: 100%;
-  height: 350px;
-  border-radius: 15px;
+  height: 320px;
+  border-radius: 0;
   overflow: hidden;
   background: linear-gradient(135deg, #f5f3f0, #e8e5e0);
   display: flex;
   align-items: center;
   justify-content: center;
+  position: relative;
+}
+
+.products-container .product-image::before {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle at 30% 50%, rgba(44, 95, 45, 0.03) 0%, transparent 50%);
+  z-index: 1;
 }
 
 .products-container .product-image img {
   width: 100%;
   height: 100%;
   object-fit: contain;
-  padding: 1rem;
+  padding: 2rem;
+  position: relative;
+  z-index: 2;
+  transition: transform 0.4s ease;
 }
 
+.products-container .product-item:hover .product-image img {
+  transform: scale(1.08);
+}
+
+/* Product Details */
 .products-container .product-details {
+  padding: 2rem;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  flex-grow: 1;
 }
 
 .products-container .product-name {
-  font-size: 2rem;
+  font-size: 1.6rem;
   color: #2c5f2d;
   font-weight: 600;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.8rem;
+  letter-spacing: 0.5px;
+  line-height: 1.3;
 }
 
 .products-container .product-tagline {
-  font-size: 1.1rem;
+  font-size: 0.95rem;
   color: #8b7355;
   font-style: italic;
   margin-bottom: 1rem;
-  font-weight: 500;
+  font-weight: 400;
+  line-height: 1.4;
 }
 
 .products-container .product-description {
-  font-size: 1rem;
+  font-size: 0.95rem;
   color: #6a6a6a;
-  line-height: 1.6;
+  line-height: 1.7;
   margin-bottom: 1.5rem;
+  flex-grow: 1;
+}
+
+/* Price Section */
+.products-container .product-price-section {
+  border-top: 1px solid #e8e5e0;
+  padding-top: 1.2rem;
+  margin-top: auto;
 }
 
 .products-container .product-price {
-  font-size: 1.5rem;
+  font-size: 1.4rem;
   color: #2c5f2d;
   font-weight: 700;
-  margin-bottom: 0.5rem;
+  margin-bottom: 1rem;
+  letter-spacing: 0.5px;
 }
 
 /* Product Actions */
 .products-container .product-actions {
-  margin-top: 1.5rem;
   display: flex;
   flex-direction: column;
   gap: 0.8rem;
 }
 
 .products-container .variant-select {
-  padding: 0.8rem 1rem;
+  padding: 0.9rem 1.2rem;
   font-size: 1rem;
   border: 2px solid #e8e5e0;
-  border-radius: 10px;
+  border-radius: 12px;
   background: white;
   color: #2c5f2d;
   cursor: pointer;
   transition: all 0.3s;
   font-weight: 500;
+  font-family: 'Cormorant Garamond', 'Georgia', serif;
 }
 
 .products-container .variant-select:hover,
 .products-container .variant-select:focus {
   border-color: #2c5f2d;
   outline: none;
+  box-shadow: 0 0 0 3px rgba(44, 95, 45, 0.1);
 }
 
 .products-container .add-to-cart-btn {
-  padding: 1rem 2rem;
-  font-size: 1.1rem;
+  padding: 1rem 1.5rem;
+  font-size: 1.05rem;
   background: #2c5f2d;
   color: white;
   border: none;
-  border-radius: 50px;
+  border-radius: 12px;
   cursor: pointer;
   font-weight: 600;
   transition: all 0.3s;
@@ -564,16 +599,34 @@
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
+  box-shadow: 0 4px 12px rgba(44, 95, 45, 0.2);
 }
 
 .products-container .add-to-cart-btn:hover {
   background: #1f4620;
-  transform: scale(1.02);
-  box-shadow: 0 5px 15px rgba(44, 95, 45, 0.3);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(44, 95, 45, 0.35);
 }
 
 .products-container .add-to-cart-btn:active {
-  transform: scale(0.98);
+  transform: translateY(0);
+}
+
+/* Quick View Badge (optional enhancement) */
+.products-container .product-badge {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: rgba(44, 95, 45, 0.9);
+  color: white;
+  padding: 0.4rem 1rem;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  z-index: 3;
+  backdrop-filter: blur(10px);
 }
 
 
@@ -602,15 +655,10 @@
 
 /* ----- RESPONSIVE DESIGN ----- */
 
-@media (max-width: 1024px) {
-  .products-container .product-item {
-    grid-template-columns: 300px 1fr;
+@media (max-width: 1200px) {
+  .products-container {
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
     gap: 2rem;
-    padding: 2rem;
-  }
-
-  .products-container .product-image {
-    height: 300px;
   }
 }
 
@@ -663,27 +711,41 @@
 
   .products-container {
     margin-top: 2rem;
-  }
-
-  .products-container .product-item {
     grid-template-columns: 1fr;
-    gap: 1.5rem;
-    padding: 1.5rem;
+    gap: 2rem;
   }
 
   .products-container .product-image {
     height: 280px;
   }
 
+  .products-container .product-details {
+    padding: 1.5rem;
+  }
+
   .products-container .product-name {
-    font-size: 1.5rem;
+    font-size: 1.4rem;
   }
 
   .products-container .product-tagline {
-    font-size: 1rem;
+    font-size: 0.9rem;
   }
 
   .products-container .product-price {
+    font-size: 1.3rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .products-container .product-image {
+    height: 240px;
+  }
+
+  .products-container .product-details {
+    padding: 1.2rem;
+  }
+
+  .products-container .product-name {
     font-size: 1.3rem;
   }
 }
