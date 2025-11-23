@@ -18,6 +18,8 @@
   <link href="css/cart.css" rel="stylesheet"/>
   <link href="css/tabs.css" rel="stylesheet"/>
   <link href="css/featured-carousel.css" rel="stylesheet"/>
+  <link href="css/category.css" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
 </head>
 <body>
@@ -180,47 +182,66 @@
 </section>
 
 <!-- Categories Preview Section -->
+<!-- Categories Preview Section -->
 <section class="categories-preview" style="padding: 80px 2rem; background: #faf9f7;">
   <div style="max-width: 1400px; margin: 0 auto;">
     <h2 style="text-align: center; font-size: 2.5rem; color: #2c5f2d; margin-bottom: 1rem; font-weight: 300; letter-spacing: 3px;">Shop by Category</h2>
     <p style="text-align: center; font-size: 1.1rem; color: #6a6a6a; margin-bottom: 3rem;">Explore our complete range of Ayurvedic products</p>
 
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem;">
+    <div class="preview-categories-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem;">
 
-      <a href="products/pain-relief.html" style="text-decoration: none; background: white; padding: 2rem; border-radius: 15px; text-align: center; transition: all 0.3s; border: 2px solid #e8e5e0;">
-        <div style="font-size: 3rem; margin-bottom: 1rem;">🌿</div>
-        <h3 style="color: #2c5f2d; margin-bottom: 0.5rem; font-size: 1.3rem;">Pain Relief</h3>
-        <p style="color: #6a6a6a; font-size: 0.9rem;">Ayurvedic massage oils</p>
+      <!-- Pain Relief -->
+      <a href="products/pain-relief.html" class="preview-category-card">
+        <div class="preview-category-icon pain-relief">
+          <i class="fas fa-spa"></i>
+        </div>
+        <h3 class="preview-category-title">Pain Relief</h3>
+        <p class="preview-category-desc">Ayurvedic massage oils</p>
       </a>
 
-      <a href="products/hair-care.html" style="text-decoration: none; background: white; padding: 2rem; border-radius: 15px; text-align: center; transition: all 0.3s; border: 2px solid #e8e5e0;">
-        <div style="font-size: 3rem; margin-bottom: 1rem;">💆</div>
-        <h3 style="color: #2c5f2d; margin-bottom: 0.5rem; font-size: 1.3rem;">Hair Care</h3>
-        <p style="color: #6a6a6a; font-size: 0.9rem;">Natural hair oils</p>
+      <!-- Hair Care -->
+      <a href="products/hair-care.html" class="preview-category-card">
+        <div class="preview-category-icon hair-care">
+          <i class="fas fa-wind"></i>
+        </div>
+        <h3 class="preview-category-title">Hair Care</h3>
+        <p class="preview-category-desc">Natural hair oils</p>
       </a>
 
-      <a href="products/skin-care.html" style="text-decoration: none; background: white; padding: 2rem; border-radius: 15px; text-align: center; transition: all 0.3s; border: 2px solid #e8e5e0;">
-        <div style="font-size: 3rem; margin-bottom: 1rem;">✨</div>
-        <h3 style="color: #2c5f2d; margin-bottom: 0.5rem; font-size: 1.3rem;">Skin Care</h3>
-        <p style="color: #6a6a6a; font-size: 0.9rem;">Radiant skin essentials</p>
+      <!-- Skin Care -->
+      <a href="products/skin-care.html" class="preview-category-card">
+        <div class="preview-category-icon skin-care">
+          <i class="fas fa-star"></i>
+        </div>
+        <h3 class="preview-category-title">Skin Care</h3>
+        <p class="preview-category-desc">Radiant skin essentials</p>
       </a>
 
-      <a href="products/soaps.html" style="text-decoration: none; background: white; padding: 2rem; border-radius: 15px; text-align: center; transition: all 0.3s; border: 2px solid #e8e5e0;">
-        <div style="font-size: 3rem; margin-bottom: 1rem;">🧼</div>
-        <h3 style="color: #2c5f2d; margin-bottom: 0.5rem; font-size: 1.3rem;">Artisan Soaps</h3>
-        <p style="color: #6a6a6a; font-size: 0.9rem;">Handcrafted soaps</p>
+      <!-- Artisan Soaps -->
+      <a href="products/soaps.html" class="preview-category-card">
+        <div class="preview-category-icon soaps">
+          <i class="fas fa-hand-sparkles"></i>
+        </div>
+        <h3 class="preview-category-title">Artisan Soaps</h3>
+        <p class="preview-category-desc">Handcrafted soaps</p>
       </a>
 
-      <a href="products/essential-oils.html" style="text-decoration: none; background: white; padding: 2rem; border-radius: 15px; text-align: center; transition: all 0.3s; border: 2px solid #e8e5e0;">
-        <div style="font-size: 3rem; margin-bottom: 1rem;">🌸</div>
-        <h3 style="color: #2c5f2d; margin-bottom: 0.5rem; font-size: 1.3rem;">Essential Oils</h3>
-        <p style="color: #6a6a6a; font-size: 0.9rem;">Pure botanical oils</p>
+      <!-- Essential Oils -->
+      <a href="products/essential-oils.html" class="preview-category-card">
+        <div class="preview-category-icon essential-oils">
+          <i class="fas fa-seedling"></i>
+        </div>
+        <h3 class="preview-category-title">Essential Oils</h3>
+        <p class="preview-category-desc">Pure botanical oils</p>
       </a>
 
-      <a href="products/herbal-tea.html" style="text-decoration: none; background: white; padding: 2rem; border-radius: 15px; text-align: center; transition: all 0.3s; border: 2px solid #e8e5e0;">
-        <div style="font-size: 3rem; margin-bottom: 1rem;">🍵</div>
-        <h3 style="color: #2c5f2d; margin-bottom: 0.5rem; font-size: 1.3rem;">Herbal Teas</h3>
-        <p style="color: #6a6a6a; font-size: 0.9rem;">Wellness teas</p>
+      <!-- Herbal Teas -->
+      <a href="products/herbal-tea.html" class="preview-category-card">
+        <div class="preview-category-icon herbal-tea">
+          <i class="fas fa-mug-hot"></i>
+        </div>
+        <h3 class="preview-category-title">Herbal Teas</h3>
+        <p class="preview-category-desc">Wellness teas</p>
       </a>
 
     </div>
@@ -259,6 +280,7 @@
     </div>
   </div>
 </section>
+
 <section class="contact" id="contact">
   <h2>Connect With Us</h2>
   <p>Have questions or want to learn more about our products? We would be delighted to assist you.</p>

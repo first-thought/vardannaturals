@@ -10,6 +10,9 @@
   <link href="../css/components.css" rel="stylesheet">
   <link href="../css/products.css" rel="stylesheet">
   <link href="../css/responsive.css" rel="stylesheet">
+  <link href="../css/category.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+
 </head>
 <body>
 <header>
@@ -30,20 +33,26 @@
   </nav>
 </header>
 
-<section class="category-page" style="padding: 140px 2rem 80px;">
+
+<section class="category-page" style="padding: 140px 2rem 80px; background: #faf9f7;">
   <div style="max-width: 1400px; margin: 0 auto;">
 
-    <!-- Breadcrumb -->
-    <div class="breadcrumb" style="margin-bottom: 2rem; font-size: 0.95rem; color: #6a6a6a;">
-      <a href="../index.html" style="color: #2c5f2d; text-decoration: none;">Home</a> /
-      <a href="../products.html" style="color: #2c5f2d; text-decoration: none;">Products</a> /
-      <span>Wellness & Specialty Care</span>
-    </div>
-
-    <!-- Category Header -->
-    <div style="text-align: center; margin-bottom: 4rem;">
-      <h1 style="font-size: 2.8rem; color: #2c5f2d; margin-bottom: 1rem; font-weight: 300; letter-spacing: 2px;">💫 Wellness & Specialty Care</h1>
-      <p style="font-size: 1.15rem; color: #6a6a6a; max-width: 800px; margin: 0 auto;">Roll-ons, balms, creams, and specialty products for everyday wellness</p>
+    <div class="category-header wellness">
+      <div class="breadcrumb">
+        <a href="../index.html">Home</a>
+        <i class="fas fa-chevron-right" style="font-size: 0.7rem;"></i>
+        <a href="../products.html">Products</a>
+        <i class="fas fa-chevron-right" style="font-size: 0.7rem;"></i>
+        <span>Wellness & Specialty Care</span>
+      </div>
+      <br>
+      <div class="category-icon-wrapper">
+        <div class="category-icon wellness">
+          <i class="fas fa-heart"></i>
+        </div>
+      </div>
+      <h1>Wellness & Specialty Care</h1>
+      <p>Roll-ons, balms, creams, and specialty products for everyday wellness</p>
     </div>
 
     <!-- Products -->
@@ -221,14 +230,14 @@
         </div>
       </div>
 
-    <!-- Back to Products Button -->
-    <div style="text-align: center; margin-top: 4rem;">
-      <a href="../products.html"
-         style="display: inline-flex; align-items: center; gap: 0.5rem; color: #2c5f2d; text-decoration: none; font-size: 1.1rem; padding: 1rem 2rem; border: 2px solid #2c5f2d; border-radius: 50px; transition: all 0.3s;">
-        ← Back to All Categories
-      </a>
+      <!-- Back to Products Button -->
+      <div style="text-align: center; margin-top: 4rem;">
+        <a href="../products.html"
+           style="display: inline-flex; align-items: center; gap: 0.5rem; color: #2c5f2d; text-decoration: none; font-size: 1.1rem; padding: 1rem 2rem; border: 2px solid #2c5f2d; border-radius: 50px; transition: all 0.3s;">
+          ← Back to All Categories
+        </a>
+      </div>
     </div>
-  </div>
   </div>
 </section>
 

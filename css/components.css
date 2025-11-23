@@ -305,26 +305,29 @@
   font-size: 1rem;
 }
 
-/* Breadcrumb Styles */
 .breadcrumb {
-  margin-bottom: 2rem;
-  font-size: 0.95rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
   color: #6a6a6a;
+  margin-bottom: 1.5rem;
 }
 
 .breadcrumb a {
   color: #2c5f2d;
   text-decoration: none;
-  transition: all 0.3s;
+  transition: color 0.3s;
 }
 
 .breadcrumb a:hover {
-  color: #1a3a1b;
+  color: #1f4620;
   text-decoration: underline;
 }
 
 .breadcrumb span {
-  color: #8a8a8a;
+  color: #2c5f2d;
+  font-weight: 500;
 }
 
 /* Back to Categories Button */
