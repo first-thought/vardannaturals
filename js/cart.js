@@ -126,7 +126,7 @@ function renderCartPage() {
                 <div class="cart-empty-icon">🛍️</div>
                 <h2>Your cart is empty</h2>
                 <p>Looks like you haven't added anything to your cart yet.</p>
-                <a href="../index.html#products" class="shop-now-btn">
+                <a href="../products.html" class="shop-now-btn">
                     🌿 Start Shopping
                 </a>
             </div>
