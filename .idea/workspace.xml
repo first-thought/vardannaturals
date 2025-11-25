@@ -13,9 +13,9 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
+        <option value="CSS File" />
         <option value="HTML File" />
         <option value="JavaScript File" />
-        <option value="CSS File" />
       </list>
     </option>
   </component>
@@ -49,9 +49,14 @@
     "DefaultHtmlFileTemplate": "HTML File",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
+<<<<<<< HEAD
     "git-widget-placeholder": "products-page-management",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "/Users/megha/Documents/Vardan/vardannaturals",
+=======
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "/Users/megha/Documents/Vardan/vardannaturals/products",
+>>>>>>> f25efba564eb1fca3f890b9f1a02559b57a03900
     "list.type.of.created.stylesheet": "CSS",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
