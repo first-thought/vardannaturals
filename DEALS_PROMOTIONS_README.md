@@ -352,7 +352,7 @@ Add to `css/category.css`:
   <div class="featured-product-info">
     <h3>Kumkumadi Tailam</h3>
     <p>Miraculous beauty elixir with Kashmiri saffron</p>
-    <div class="featured-product-price">₹699</div>
+    <div class="featured-product-price">Loading...</div>
     <a href="products/skin-care.html" class="featured-product-link">Shop Skin Care →</a>
   </div>
 </div>

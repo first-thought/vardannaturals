@@ -1,205 +1,429 @@
-// js/cart.updated.js - Cart with variant-select support (generated)
-/* Enhanced cart.updated.js supporting:
- - data-variant-selector (CSS selector for select)
- - option[data-price] for variant price
- - generic add-to-cart buttons (.add-to-cart-btn)
- - migration of inline addToCart(...) onclicks
-*/
+/**
+ * Unified cart.js for Vardan Naturals
+ * - Uses centralized prices via getPrice(name, variant) if available (prices.js)
+ * - Backwards compatible with older addToCart signature and localStorage key 'vardanCart'
+ * - Exposes same functions used across your site: loadCart(), renderCartPage(), addToCart(...)
+ * - Auto-binds .add-to-cart-btn buttons and supports data-variant-selector & option[data-price]
+ * - Safe: degrades to data-price attributes when centralized pricing is not present
+ *
+ * Author: ChatGPT (tailored for your project)
+ * Last updated: 2025
+ */
 
+  // ===============================
+  // Configuration
+  // ===============================
+const STORAGE_KEY = 'vardanCart'; // keep old key for compatibility
+const WHATSAPP_NUMBER = '918077775729'; // change if needed
+
+// ===============================
+// Internal state
+// ===============================
 let cart = [];
 
-// Load cart from localStorage
+// ===============================
+// Utilities
+// ===============================
+
+/**
+ * Parse a price expression like "₹499" or "499" to a number.
+ * Returns NaN if it cannot parse.
+ */
+function parsePriceToNumber(priceText) {
+  if (priceText === undefined || priceText === null) return NaN;
+  try {
+    // Remove all non-digit/decimal characters
+    const cleaned = String(priceText).replace(/[^\d.]/g, '');
+    return parseFloat(cleaned);
+  } catch (e) {
+    return NaN;
+  }
+}
+
+/**
+ * Format numeric price to display text (₹ integer, no decimals)
+ */
+function formatPriceText(n) {
+  if (isNaN(n)) return '₹0';
+  return `₹${Math.round(n)}`;
+}
+
+/**
+ * Safe wrapper around centralized getPrice(name, variant)
+ * Expected getPrice to return numeric price or null/undefined if not found.
+ */
+function safeGetPrice(name, variant) {
+  try {
+    if (typeof getPrice === 'function') {
+      const p = getPrice(name, variant);
+      // Accept numbers (including 0). Treat other returns as 'not found'
+      if (p === null || p === undefined || isNaN(Number(p))) return null;
+      return Number(p);
+    }
+  } catch (err) {
+    console.warn('getPrice() threw error:', err);
+  }
+  return null;
+}
+
+// ===============================
+// Storage / Load / Save
+// ===============================
 function loadCart() {
-  const savedCart = localStorage.getItem('vardanCart');
-  if (savedCart) {
+  const saved = localStorage.getItem(STORAGE_KEY);
+  if (saved) {
     try {
-      cart = JSON.parse(savedCart);
-    } catch (e) {
-      console.warn('Failed to parse vardanCart', e);
+      cart = JSON.parse(saved) || [];
+    } catch (err) {
+      console.warn('Failed to parse cart from storage, resetting', err);
       cart = [];
     }
+  } else {
+    cart = [];
   }
+
+  // Ensure items have expected fields (backwards compatible)
+  cart = cart.map(item => ({
+    name: item.name || '',
+    variant: item.variant || (item.variant === '' ? '' : 'default'),
+    priceText: item.priceText || item.price || item.priceText || (item.price ? formatPriceText(parsePriceToNumber(item.price)) : '₹0'),
+    // also keep numeric price if present as price (legacy)
+    price: (item.price && !isNaN(Number(item.price))) ? Number(item.price) : parsePriceToNumber(item.priceText || item.priceText),
+    image: item.image || 'images/placeholder.jpg',
+    quantity: Number(item.quantity || 1),
+    addedAt: item.addedAt || new Date().toISOString()
+  }));
+
+  // Immediately sync prices if centralized pricing exists
+  syncCartPrices();
+
   updateCartCount();
   return cart;
 }
 
-// Save cart to localStorage
 function saveCart() {
   try {
-    localStorage.setItem('vardanCart', JSON.stringify(cart));
-  } catch (e) {
-    console.warn('Failed to save cart', e);
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(cart));
+  } catch (err) {
+    console.warn('Failed to save cart', err);
   }
   updateCartCount();
 }
 
-// Add to Cart (unchanged signature for compatibility)
-function addToCart(productName, price, variant = '', imageSrc = '') {
-  const numPrice = parseFloat(String(price).replace(/[^0-9.]/g, '')) || 0;
+// ===============================
+// Price Syncing
+// ===============================
+/**
+ * Replace each item's priceText (and numeric price) with the current price from getPrice()
+ * If getPrice returns null, we keep existing priceText
+ */
+function syncCartPrices() {
+  if (typeof getPrice !== 'function') return; // nothing to do
 
-  const existingIndex = cart.findIndex(item =>
-    item.name === productName && item.variant === variant
-  );
+  let updated = false;
 
-  if (existingIndex > -1) {
-    cart[existingIndex].quantity += 1;
-    showNotification('Quantity updated in cart!');
+  cart = cart.map(item => {
+    const currentNumeric = safeGetPrice(item.name, item.variant);
+    if (currentNumeric !== null) {
+      const newPriceText = formatPriceText(currentNumeric);
+      if (item.priceText !== newPriceText) {
+        updated = true;
+        return {
+          ...item,
+          priceText: newPriceText,
+          price: currentNumeric
+        };
+      } else {
+        // still ensure numeric price is set
+        return { ...item, price: currentNumeric };
+      }
+    }
+    return item;
+  });
+
+  if (updated) {
+    saveCart();
+    console.log('✅ Cart prices synced with centralized pricing');
+  }
+}
+
+// ===============================
+// Core Cart Actions
+// ===============================
+
+/**
+ * Unified addToCart interface to support both:
+ *  - addToCart(productName, variant, image, variantSelector)  <-- your new signature
+ *  - addToCart(productName, priceText, variant, image)        <-- legacy signature
+ *
+ * Heuristic:
+ *  - If second argument looks like a price ("₹" or digits), treat as legacy price signature.
+ *  - Else treat as variant signature.
+ */
+function addToCart(arg1, arg2, arg3, arg4) {
+  // Determine signature
+  const productName = String(arg1 || '').trim();
+
+  // Detect legacy pattern: second arg is priceText ("₹499" or numeric string)
+  const looksLikePrice = (v) => {
+    if (v === undefined || v === null) return false;
+    const s = String(v);
+    return /[₹\d]/.test(s) && /[₹]/.test(s) || /^\d+(\.\d+)?$/.test(s);
+  };
+
+  let variant = '';
+  let image = '';
+  let priceText = null;
+  let numericPrice = null;
+
+  if (looksLikePrice(arg2) && (typeof arg3 === 'string' || arg3 === undefined)) {
+    // Legacy: addToCart(name, priceText, variant?, image?)
+    priceText = String(arg2);
+    variant = arg3 || '';
+    image = arg4 || '';
+    numericPrice = parsePriceToNumber(priceText);
+  } else {
+    // New: addToCart(name, variant, image, variantSelector?)
+    variant = arg2 || '';
+    image = arg3 || '';
+    // try centralized price first
+    const central = safeGetPrice(productName, variant);
+    if (central !== null) {
+      numericPrice = central;
+      priceText = formatPriceText(central);
+    } else {
+      // fallback: try to read price from DOM using variantSelector (arg4) or data-price on button
+      priceText = null;
+      if (typeof arg4 === 'string' && arg4.length) {
+        const sel = document.querySelector(arg4);
+        if (sel) {
+          const opt = sel.options[sel.selectedIndex];
+          if (opt) {
+            const optPrice = opt.getAttribute('data-price') || opt.dataset.price;
+            if (optPrice) {
+              priceText = optPrice;
+              numericPrice = parsePriceToNumber(priceText);
+            }
+          }
+        }
+      }
+    }
+  }
+
+  // If still no priceText, try centralized again with empty variant
+  if (!priceText) {
+    const central2 = safeGetPrice(productName, '');
+    if (central2 !== null) {
+      numericPrice = central2;
+      priceText = formatPriceText(central2);
+    }
+  }
+
+  // As final fallback, set price to 0
+  if (!priceText) {
+    priceText = '₹0';
+    if (numericPrice === null || numericPrice === undefined || isNaN(numericPrice)) numericPrice = 0;
+  }
+
+  // Find existing item
+  const existing = cart.find(it => it.name === productName && it.variant === variant);
+  if (existing) {
+    existing.quantity = Number(existing.quantity || 0) + 1;
+    existing.priceText = priceText;
+    existing.price = numericPrice;
   } else {
     cart.push({
       name: productName,
-      price: numPrice,
-      priceText: price,
       variant: variant,
+      priceText: priceText,
+      price: numericPrice,
+      image: image || 'images/placeholder.jpg',
       quantity: 1,
-      image: imageSrc
+      addedAt: new Date().toISOString()
     });
-    showNotification('Added to cart! ✓');
   }
 
   saveCart();
-
-  // If on cart page, re-render
-  if (window.location.pathname.includes('cart.html')) {
-    renderCartPage();
-  }
+  showCartNotification(`✓ ${productName} added to cart!`);
 }
 
-// Update quantity
-function updateQuantity(index, change) {
-  if (cart[index]) {
-    cart[index].quantity += change;
-
-    if (cart[index].quantity <= 0) {
-      removeFromCart(index);
-    } else {
-      saveCart();
-      renderCartPage();
-    }
-  }
-}
-
-// Remove from cart
+/**
+ * Remove from cart by index
+ */
 function removeFromCart(index) {
-  if (confirm('Remove this item from cart?')) {
+  if (!Number.isInteger(index) || index < 0 || index >= cart.length) return;
+  if (!confirm('Remove this item from cart?')) return;
+  cart.splice(index, 1);
+  saveCart();
+  renderCartPage();
+  showCartNotification('Item removed from cart');
+}
+
+/**
+ * Update quantity for an item and re-render
+ */
+function updateQuantity(index, change) {
+  if (!Number.isInteger(index) || index < 0 || index >= cart.length) return;
+  cart[index].quantity = Number(cart[index].quantity || 0) + Number(change || 0);
+
+  if (cart[index].quantity <= 0) {
+    // remove
     cart.splice(index, 1);
-    saveCart();
-    renderCartPage();
-    showNotification('Item removed');
   }
+  saveCart();
+  renderCartPage();
 }
 
-// Clear cart
+/**
+ * Clear entire cart
+ */
 function clearCart() {
-  if (confirm('Clear all items from cart?')) {
-    cart = [];
-    saveCart();
-    renderCartPage();
-    showNotification('Cart cleared');
-  }
+  if (!confirm('Are you sure you want to clear your entire cart?')) return;
+  cart = [];
+  saveCart();
+  renderCartPage();
+  showCartNotification('Cart cleared');
 }
 
-// Update cart count in navigation
-function updateCartCount() {
-  const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
-  const countElements = document.querySelectorAll('#navCartCount, #cartCount');
-  countElements.forEach(el => {
-    if (el) el.textContent = totalItems;
-  });
-}
-
-// Calculate total
+// ===============================
+// Totals & Display helpers
+// ===============================
 function calculateTotal() {
-  return cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+  return cart.reduce((sum, item) => {
+    const num = parsePriceToNumber(item.priceText || item.price);
+    const qty = Number(item.quantity || 0);
+    return sum + ( (isNaN(num) ? 0 : num) * qty );
+  }, 0);
 }
 
-// Render cart page
+function updateCartCount() {
+  const totalItems = cart.reduce((s, i) => s + Number(i.quantity || 0), 0);
+  const els = document.querySelectorAll('#navCartCount, .cart-count, #cartCount');
+  els.forEach(el => { if (el) el.textContent = totalItems; });
+}
+
+// ===============================
+// Render (keeps old renderCartPage API)
+// ===============================
 function renderCartPage() {
-  const container = document.getElementById('cartItemsContainer');
-  const subtotalEl = document.getElementById('subtotal');
-  const totalEl = document.getElementById('totalAmount');
+  // Attempt to support either ID names in your site
+  const container = document.getElementById('cartItemsContainer') || document.getElementById('cartItems') || document.getElementById('cartItemsContainer');
+  const subtotalEl = document.getElementById('subtotal') || document.getElementById('cartSubtotal') || document.getElementById('subtotalAmount');
+  const totalEl = document.getElementById('totalAmount') || document.getElementById('cartTotal') || document.getElementById('cartTotalAmount');
 
   if (!container) return;
 
-  if (cart.length === 0) {
-    container.innerHTML = `
-            <div class="cart-empty-state">
-                <div class="cart-empty-icon">🛍️</div>
-                <h2>Your cart is empty</h2>
-                <p>Looks like you haven't added anything to your cart yet.</p>
-                <a href="../products.html" class="shop-now-btn">
-                    🌿 Start Shopping
-                </a>
-            </div>
-        `;
+  // Ensure prices are current
+  syncCartPrices();
 
+  if (!cart || cart.length === 0) {
+    container.innerHTML = `
+      <div class="cart-empty-state">
+        <div class="cart-empty-icon">🛍️</div>
+        <h2>Your cart is empty</h2>
+        <p>Looks like you haven't added anything to your cart yet.</p>
+        <a href="index.html#products" class="shop-now-btn">🌿 Start Shopping</a>
+      </div>
+    `;
     if (subtotalEl) subtotalEl.textContent = '₹0';
     if (totalEl) totalEl.textContent = '₹0';
-
+    // disable checkout button if present
     const checkoutBtn = document.getElementById('checkoutBtn');
     if (checkoutBtn) checkoutBtn.disabled = true;
-
+    updateCartCount();
     return;
   }
 
-  // Render cart items
-  container.innerHTML = cart.map((item, index) => `
-        <div class="cart-item">
-            ${item.image ?
-    `<img src="${item.image}" class="cart-item-image" alt="${item.name}">` :
-    '<div class="cart-item-image" style="display: flex; align-items: center; justify-content: center; font-size: 3rem;">🌿</div>'
-  }
-            <div class="cart-item-details">
-                <div class="cart-item-name">${item.name}</div>
-                ${item.variant ? `<div class="cart-item-variant">Variant: ${item.variant}</div>` : ''}
-                <div class="cart-item-price">${item.priceText}</div>
-                <div class="cart-item-actions">
-                    <div class="quantity-control">
-                        <button class="qty-btn" onclick="updateQuantity(${index}, -1)">−</button>
-                        <span class="qty-display">${item.quantity}</span>
-                        <button class="qty-btn" onclick="updateQuantity(${index}, 1)">+</button>
-                    </div>
-                    <button class="remove-btn" onclick="removeFromCart(${index})" title="Remove item">🗑️</button>
-                </div>
+  // Build HTML for items
+  const html = cart.map((item, i) => {
+    const num = parsePriceToNumber(item.priceText || item.price) || 0;
+    const itemTotal = Math.round(num * (Number(item.quantity) || 0));
+    return `
+      <div class="cart-item">
+        <img src="${item.image || 'images/placeholder.jpg'}" alt="${escapeHtml(item.name)}" class="cart-item-image" onerror="this.src='images/placeholder.jpg'">
+        <div class="cart-item-details">
+          <div class="cart-item-name">${escapeHtml(item.name)}</div>
+          ${item.variant ? `<div class="cart-item-variant">${escapeHtml(item.variant)}</div>` : ''}
+          <div class="cart-item-price">${escapeHtml(String(item.priceText || formatPriceText(num)))}</div>
+          <div class="cart-item-actions">
+            <div class="quantity-control">
+              <button class="qty-btn" onclick="updateQuantity(${i}, -1)">−</button>
+              <span class="qty-display">${Number(item.quantity)}</span>
+              <button class="qty-btn" onclick="updateQuantity(${i}, 1)">+</button>
             </div>
-            <div style="text-align: right;">
-                <div style="font-size: 1.3rem; font-weight: 600; color: #2c5f2d;">
-                    ₹${(item.price * item.quantity).toFixed(0)}
-                </div>
-                <div style="font-size: 0.85rem; color: #8a8a8a; margin-top: 0.3rem;">
-                    ₹${item.price} × ${item.quantity}
-                </div>
-            </div>
+            <button class="remove-btn" onclick="removeFromCart(${i})" title="Remove item">🗑️</button>
+          </div>
         </div>
-    `).join('');
+        <div class="cart-item-total" style="font-weight:600; color:#2c5f2d; font-size:1.2rem;">
+          ₹${itemTotal.toFixed(0)}
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  container.innerHTML = html;
 
   // Update totals
-  const total = calculateTotal();
+  const total = Math.round(calculateTotal());
   if (subtotalEl) subtotalEl.textContent = `₹${total.toFixed(0)}`;
   if (totalEl) totalEl.textContent = `₹${total.toFixed(0)}`;
 
+  // enable checkout
   const checkoutBtn = document.getElementById('checkoutBtn');
   if (checkoutBtn) checkoutBtn.disabled = false;
+
+  updateCartCount();
 }
 
-// Checkout via WhatsApp
+// Small helper to avoid XSS in inserted innerHTML segments (product names)
+function escapeHtml(str) {
+  if (!str && str !== 0) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
+}
+
+// ===============================
+// Checkout (WhatsApp) - uses stored canonical prices (synced)
+// ===============================
 function checkoutWhatsApp() {
   if (cart.length === 0) {
     alert('Your cart is empty!');
     return;
   }
 
-  const phoneNumber = '918077775729';
+  // Sync prices again before sending
+  if (typeof syncCartPrices === "function") {
+    syncCartPrices();
+  }
+
+  const phoneNumber = '918077775729'; // your number
+
   let message = `🛒 *New Order from Vardan Naturals Website*\n\n`;
 
   cart.forEach((item, index) => {
+    const numericPrice = parseFloat(String(item.priceText || item.price).replace(/[^0-9.]/g, '')) || 0;
+    const subtotal = (numericPrice * item.quantity).toFixed(0);
+
     message += `${index + 1}. *${item.name}*\n`;
-    if (item.variant) message += `   Variant: ${item.variant}\n`;
+
+    if (item.variant) {
+      message += `   Variant: ${item.variant}\n`;
+    }
+
     message += `   Price: ${item.priceText}\n`;
     message += `   Quantity: ${item.quantity}\n`;
-    message += `   Subtotal: ₹${(item.price * item.quantity).toFixed(0)}\n\n`;
+    message += `   Subtotal: ₹${subtotal}\n\n`;
   });
 
-  const total = calculateTotal();
+  const total = cart.reduce((sum, item) => {
+    const num = parseFloat(String(item.priceText || item.price).replace(/[^0-9.]/g, '')) || 0;
+    return sum + num * (item.quantity || 0);
+  }, 0);
+
   message += `───────────────\n`;
   message += `*Total Amount: ₹${total.toFixed(0)}*\n\n`;
   message += `Please confirm availability and payment details. Thank you! 🙏`;
@@ -214,57 +438,81 @@ function checkoutWhatsApp() {
   }, 1500);
 }
 
-// Show notification
-function showNotification(message) {
-  const notification = document.createElement('div');
-  notification.style.cssText = `
-        position: fixed;
-        top: 100px;
-        right: 30px;
-        background: #2c5f2d;
-        color: white;
-        padding: 1rem 1.5rem;
-        border-radius: 8px;
-        z-index: 10000;
-        animation: slideIn 0.3s ease;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-        font-weight: 500;
-    `;
-  notification.textContent = message;
-  document.body.appendChild(notification);
+// ===============================
+// Notifications (single implementation)
+// ===============================
+function showCartNotification(message) {
+  // Remove existing notification if any
+  const existing = document.querySelector('.cart-notification');
+  if (existing) existing.remove();
+
+  const n = document.createElement('div');
+  n.className = 'cart-notification';
+  n.textContent = message;
+  n.style.cssText = `
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    background: #2c5f2d;
+    color: white;
+    padding: 1rem 1.6rem;
+    border-radius: 50px;
+    box-shadow: 0 6px 24px rgba(44,95,45,0.4);
+    z-index: 10000;
+    animation: slideInRight 0.32s ease;
+  `;
+  document.body.appendChild(n);
 
   setTimeout(() => {
-    notification.style.animation = 'slideOut 0.3s ease';
-    setTimeout(() => notification.remove(), 300);
-  }, 2500);
+    n.style.animation = 'slideOutRight 0.28s ease';
+    setTimeout(() => n.remove(), 280);
+  }, 2800);
 }
 
-/* -------------------------
-   Generic add-to-cart enhancements
-   ------------------------- */
+// Insert notification animations styles if not present
+(function ensureNotificationAnimations() {
+  if (document.getElementById('cart-animations')) return;
+  const style = document.createElement('style');
+  style.id = 'cart-animations';
+  style.textContent = `
+    @keyframes slideInRight {
+      from { transform: translateX(100%); opacity: 0; }
+      to   { transform: translateX(0); opacity: 1; }
+    }
+    @keyframes slideOutRight {
+      from { transform: translateX(0); opacity: 1; }
+      to   { transform: translateX(100%); opacity: 0; }
+    }
+  `;
+  document.head.appendChild(style);
+})();
+
+// ===============================
+// Add-to-cart bindings & helpers (supports data-* attributes and migration)
+// ===============================
 
 /**
- * handleAddToCartClick
- * Reads data-* attributes from a clicked button and delegates to addToCart()
- * Supports:
- * - data-name (product name)
- * - data-price (display price text, e.g. "₹499")
- * - data-variant (e.g. "100ml")
- * - data-image (image URL)
- * - data-qty (optional number)
- * - data-variant-selector (optional CSS selector to pick a variant value)
- * - data-qty-selector (optional CSS selector to pick quantity)
+ * Handle click for .add-to-cart-btn (reads data-* attributes)
+ * Supported attributes:
+ * - data-name
+ * - data-price (display price text)
+ * - data-variant
+ * - data-image
+ * - data-qty
+ * - data-variant-selector (CSS selector for <select>)
+ * - data-qty-selector (CSS selector for quantity input)
  */
 function handleAddToCartClick(e) {
-  const btn = e.currentTarget || (e.target && e.target.closest && e.target.closest('.add-to-cart-btn')) || e.target;
+  const btn = e.currentTarget || e.target || this;
   if (!btn) return;
 
+  // read attributes (prefer dataset)
   let name = (btn.dataset.name || btn.getAttribute('data-name') || '').trim();
-  let priceText = (btn.dataset.price || btn.getAttribute('data-price') || '₹0').trim();
+  let priceText = (btn.dataset.price || btn.getAttribute('data-price') || '').trim();
   let variant = (btn.dataset.variant || btn.getAttribute('data-variant') || '').trim();
   const image = (btn.dataset.image || btn.getAttribute('data-image') || '').trim();
 
-  // quantity via data-qty or selector
+  // quantity support
   let qty = parseInt(btn.dataset.qty || btn.getAttribute('data-qty') || '1', 10) || 1;
   if (btn.dataset.qtySelector) {
     const qEl = document.querySelector(btn.dataset.qtySelector);
@@ -274,12 +522,13 @@ function handleAddToCartClick(e) {
     }
   }
 
-  // variant selector support (if you want a select to control variant)
+  // variant selector support
   if (btn.dataset.variantSelector) {
     const sel = document.querySelector(btn.dataset.variantSelector);
     if (sel) {
       const selectedOption = sel.options[sel.selectedIndex];
-      variant = selectedOption ? (selectedOption.value || selectedOption.text) : variant;
+      const optVal = selectedOption ? (selectedOption.value || selectedOption.text) : '';
+      variant = optVal || variant;
       // prefer option[data-price] if present
       const optPrice = selectedOption ? selectedOption.getAttribute('data-price') : null;
       if (optPrice) priceText = optPrice;
@@ -287,17 +536,23 @@ function handleAddToCartClick(e) {
   }
 
   if (!name) {
-    console.warn('Add to cart: product name missing on button', btn);
+    console.warn('add-to-cart-btn missing data-name', btn);
+    return;
   }
 
+  // If priceText is present and looks like a price, use legacy signature (name, priceText, variant, image)
   for (let i = 0; i < qty; i++) {
-    addToCart(name, priceText, variant, image);
+    if (priceText) {
+      addToCart(name, priceText, variant, image);
+    } else {
+      // new signature: addToCart(name, variant, image, variantSelector)
+      addToCart(name, variant, image, btn.dataset.variantSelector || null);
+    }
   }
 }
 
 /**
- * initGenericAddToCart
- * Attach click listeners to .add-to-cart-btn buttons (idempotent)
+ * Attach handlers to .add-to-cart-btn buttons (idempotent)
  */
 function initGenericAddToCart(root = document) {
   const buttons = root.querySelectorAll('.add-to-cart-btn');
@@ -310,139 +565,87 @@ function initGenericAddToCart(root = document) {
 }
 
 /**
- * initAddToCartDelegation
- * Optional delegation-based approach (useful for dynamically injected product lists)
- */
-function initAddToCartDelegation(container = document) {
-  container.addEventListener('click', function (e) {
-    const btn = e.target.closest && e.target.closest('.add-to-cart-btn');
-    if (!btn) return;
-    handleAddToCartClick({ currentTarget: btn });
-  });
-}
-
-/* -------------------------
-   Migration helper: convert inline onclick="addToCart(...)" calls to data-* attributes
-   This helps you keep using the HTML as-is and migrate progressively.
-   ------------------------- */
-
-/**
- * migrateInlineAddToCart
- * Finds elements with onclick attributes calling addToCart(...) and converts them
- * to data-* attributes, then removes the onclick attribute.
- *
- * Supports patterns like:
- *   addToCart('Name', '₹499', '100ml', 'images/foo.jpg')
- *   addToCart("Name", "₹499", "100ml", "images/foo.jpg")
- *
- * It is conservative — if parsing fails it leaves the element unchanged.
+ * Migrate inline onclick="addToCart(...)" to data-* to avoid breaking older markup.
+ * This is conservative; if it can't parse it leaves element unchanged.
  */
 function migrateInlineAddToCart(root = document) {
   const nodes = root.querySelectorAll('[onclick]');
   const regex = /addToCart\s*\(\s*(['"])(.*?)\1\s*,\s*(['"])(.*?)\3\s*(?:,\s*(['"])(.*?)\5\s*(?:,\s*(['"])(.*?)\7\s*)?)?\)/;
 
   nodes.forEach(node => {
-    const onclickValue = node.getAttribute('onclick');
-    if (!onclickValue) return;
-    const match = onclickValue.match(regex);
-    if (!match) return;
+    const val = node.getAttribute('onclick');
+    if (!val) return;
+    const m = val.match(regex);
+    if (!m) return;
+    const productName = m[2] || '';
+    const priceText = m[4] || '';
+    const variant = m[6] || '';
+    const image = m[8] || '';
 
-    // match groups:
-    // match[2] => productName
-    // match[4] => price
-    // match[6] => variant (optional)
-    // match[8] => image (optional)
-    const productName = match[2] || '';
-    const priceText = match[4] || '';
-    const variant = match[6] || '';
-    const image = match[8] || '';
-
-    // set data attributes
     try {
       node.dataset.name = productName;
-      node.dataset.price = priceText;
+      if (priceText) node.dataset.price = priceText;
       if (variant) node.dataset.variant = variant;
       if (image) node.dataset.image = image;
-
+      // remove onclick to prevent double-run
+      node.removeAttribute('onclick');
     } catch (err) {
-      console.warn('Failed to migrate onclick to data-* for element', node, err);
-    }});
+      console.warn('Failed migrating onclick to data-*', err);
+    }
+  });
 }
 
-// Notification styles (only once)
-(function appendNotificationStyles() {
-  if (document.getElementById('cart-notification-styles')) return;
-  const style = document.createElement('style');
-  style.id = 'cart-notification-styles';
-  style.textContent = `
-      @keyframes slideIn {
-        from { transform: translateX(400px); opacity: 0; }
-        to { transform: translateX(0); opacity: 1; }
-      }
-      @keyframes slideOut {
-        from { transform: translateX(0); opacity: 1; }
-        to { transform: translateX(400px); opacity: 0; }
-      }
-    `;
-  document.head.appendChild(style);
-})();
-
-// Outside click to close cart (kept simple)
+// ===============================
+// Misc helpers
+// ===============================
 function setupOutsideClickClose() {
   document.addEventListener('click', function (e) {
     const cartSidebar = document.getElementById('cartSidebar');
     const cartIcon = document.querySelector('.cart-icon-container');
-
     if (!cartSidebar || !cartIcon) return;
-
-    if (cartSidebar.classList.contains('open') &&
-      !cartSidebar.contains(e.target) &&
-      !cartIcon.contains(e.target)) {
+    if (cartSidebar.classList.contains('open') && !cartSidebar.contains(e.target) && !cartIcon.contains(e.target)) {
       cartSidebar.classList.remove('open');
     }
   });
 }
 
-// Initialize
+// ===============================
+// Initialization
+// ===============================
 function initCartSystem() {
   loadCart();
+  migrateInlineAddToCart(document);
+  initGenericAddToCart(document);
   setupOutsideClickClose();
 
-  // migrate inline onclicks (conservative)
-  migrateInlineAddToCart(document);
-
-  // bind add-to-cart buttons
-  initGenericAddToCart(document);
-
-  // if dynamic products exist, you can enable delegation:
-  // const productsRoot = document.querySelector('#products') || document;
-  // initAddToCartDelegation(productsRoot);
+  // Render cart if the cart page is present
+  if (document.getElementById('cartItems') || document.getElementById('cartItemsContainer')) {
+    renderCartPage();
+  }
 }
 
+// Auto init on DOMContentLoaded (cart.html already does loadCart(); renderCartPage(); but this is safe)
 document.addEventListener('DOMContentLoaded', initCartSystem);
 
-// Enhanced Add to Cart for products with and without variants
-// document.addEventListener('DOMContentLoaded', function() {
-//   document.querySelectorAll('.add-to-cart-btn').forEach(button => {
-//     button.addEventListener('click', function() {
-//       const productName = this.getAttribute('data-name');
-//       const imageSrc = this.getAttribute('data-image');
-//       const variantSelector = this.getAttribute('data-variant-selector');
-//
-//       if (variantSelector) {
-//         // Product with variants
-//         const selectElement = document.querySelector(variantSelector);
-//         if (selectElement) {
-//           const selectedOption = selectElement.options[selectElement.selectedIndex];
-//           const variant = selectedOption.value;
-//           const price = selectedOption.getAttribute('data-price');
-//           addToCart(productName, price, variant, imageSrc);
-//         }
-//       } else {
-//         // Product without variants
-//         const price = this.getAttribute('data-price');
-//         addToCart(productName, price, '', imageSrc);
-//       }
-//     });
-//   });
-// });
+// ===============================
+// Debug / Export
+// ===============================
+window.cartDebug = {
+  viewCart: () => console.table(cart),
+  syncPrices: syncCartPrices,
+  clearCart,
+  getCart: () => cart,
+  saveCart
+};
+
+// Also expose functions to global scope so inline handlers (onclick) keep working
+window.addToCart = addToCart;
+window.removeFromCart = removeFromCart;
+window.updateQuantity = updateQuantity;
+window.clearCart = clearCart;
+window.loadCart = loadCart;
+window.renderCartPage = renderCartPage;
+window.checkoutWhatsApp = checkoutWhatsApp;
+window.updateCartCount = updateCartCount;
+
+console.log('🛒 Unified cart.js loaded — centralized price support enabled if prices.js provides getPrice()');
