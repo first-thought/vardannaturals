@@ -531,3 +531,34 @@ window.VardanNaturals = {
 };
 
 console.log('📦 VardanNaturals utilities loaded globally');
+
+// Show modal on page load (once per session)
+window.addEventListener('DOMContentLoaded', function() {
+  // Check if modal was already shown in this session
+  if (!sessionStorage.getItem('dealModalShown')) {
+    // Show modal after 1 second delay
+    setTimeout(function() {
+      document.getElementById('dealModal').style.display = 'flex';
+    }, 1000);
+
+    // Mark as shown for this session
+    sessionStorage.setItem('dealModalShown', 'true');
+  }
+});
+
+// Close modal function
+function closeDealModal() {
+  const modal = document.getElementById('dealModal');
+  modal.style.animation = 'modalSlideUp 0.3s ease';
+
+  setTimeout(() => {
+    modal.style.display = 'none';
+  }, 300);
+}
+
+// Close modal when clicking outside
+document.getElementById('dealModal')?.addEventListener('click', function(e) {
+  if (e.target === this) {
+    closeDealModal();
+  }
+});

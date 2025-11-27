@@ -73,6 +73,9 @@
 
 </head>
 <body>
+<div class="announcement-bar">
+  <p>🎉 <strong>Diwali Sale:</strong> Get 20% OFF on all products! | <a href="products.html">Shop Now →</a></p>
+</div>
 <header>
   <nav>
     <div class="logo">
@@ -129,12 +132,32 @@
     </div>
   </div>
 </section>
-<!-- Feature Image Section -->
-<section style="width: 100%; padding: 0; margin: 0;">
-  <img alt="Vardan Naturals Ayurvedic wellness products banner showcasing oils, soaps and skincare" src="images/vardan-naturals-hero-banner.jpg"
-       style="width: 100%; height: auto; display: block; max-height: 600px; object-fit: cover;"/>
-</section>
 
+<!--&lt;!&ndash; Feature Image Section &ndash;&gt;-->
+<!--<section style="width: 100%; padding: 0; margin: 0;">-->
+<!--  <img alt="Vardan Naturals Ayurvedic wellness products banner showcasing oils, soaps and skincare" src="images/vardan-naturals-hero-banner.jpg"-->
+<!--       style="width: 100%; height: auto; display: block; max-height: 600px; object-fit: cover;"/>-->
+<!--</section>-->
+
+<section style="width: 100%; padding: 0; margin: 0;">
+  <div style="position: relative;">
+    <img alt="Diwali Sale Banner" src="images/offer-banner-2.jpg"
+         style="width: 100%; height: auto; display: block; max-height: 600px; object-fit: cover;"/>
+
+    <!-- Overlay text on image -->
+    <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; color: white; z-index: 10;">
+      <h2 style="font-size: 3rem; margin-bottom: 1rem; text-shadow: 2px 2px 4px rgba(0,0,0,0.5);">
+        Diwali Mega Sale! 🎊
+      </h2>
+      <p style="font-size: 1.5rem; margin-bottom: 2rem; text-shadow: 2px 2px 4px rgba(0,0,0,0.5);">
+        Up to 30% OFF on Selected Products
+      </p>
+      <a href="products.html" style="display: inline-block; background: #2c5f2d; color: white; padding: 1rem 3rem; border-radius: 50px; font-size: 1.2rem; font-weight: 600; text-decoration: none;">
+        Shop Now →
+      </a>
+    </div>
+  </div>
+</section>
 
 <!-- Featured Products Section with Carousel -->
 <section class="featured-products" style="padding: 80px 2rem; background: white;">
@@ -397,6 +420,17 @@
   <p>© 2025 First Thought Technology. All rights reserved.</p>
   <p style="margin-top: 0.8rem; font-style: italic; opacity: 0.9;">Made with ❤️</p>
 </footer>
+<!-- Add before closing </body> tag -->
+<div id="dealModal" class="deal-modal">
+  <div class="deal-modal-content">
+    <span class="close-modal" onclick="closeDealModal()">&times;</span>
+    <h2>🎉 Limited Time Offer!</h2>
+    <p style="font-size: 1.3rem; margin: 1.5rem 0;">Get <strong>20% OFF</strong> on your first order</p>
+    <p style="color: #6a6a6a;">Use code: <strong style="color: #2c5f2d; font-size: 1.2rem;">FIRST20</strong></p>
+    <a href="products.html" class="deal-modal-btn">Shop Now</a>
+  </div>
+</div>
+
 <!-- Scripts -->
 <script src="js/main.js"></script>
 <script src="js/carousel.js"></script>
