@@ -343,7 +343,7 @@ function renderCartPage() {
         <img src="${item.image || 'images/placeholder.jpg'}" alt="${escapeHtml(item.name)}" class="cart-item-image" onerror="this.src='images/placeholder.jpg'">
         <div class="cart-item-details">
           <div class="cart-item-name">${escapeHtml(item.name)}</div>
-          ${item.variant ? `<div class="cart-item-variant">${escapeHtml(item.variant)}</div>` : ''}
+          ${item.variant && item.variant !== 'default' ? `<div class="cart-item-variant">${escapeHtml(item.variant)}</div>` : ''}
           <div class="cart-item-price">${escapeHtml(String(item.priceText || formatPriceText(num)))}</div>
           <div class="cart-item-actions">
             <div class="quantity-control">

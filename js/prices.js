@@ -187,7 +187,7 @@ const PRODUCT_PRICES = {
 // ============================================================================
 
 const SALE_CONFIG = {
-  enabled: true,  // Set to true to activate sale prices
+  enabled: false,  // Set to true to activate sale prices
   saleProducts: {
     //Example: Add sale prices here when running promotions
     "Shea Butter Soap": {
