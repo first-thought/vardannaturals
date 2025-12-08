@@ -205,6 +205,57 @@ const SALE_CONFIG = {
 };
 
 // ============================================================================
+// LOW STOCK CONFIGURATION
+// ============================================================================
+
+const LOW_STOCK_CONFIG = {
+  enabled: false,  // Set to true to show low stock badges
+  lowStockProducts: {
+    // Add products that are running low in stock
+    // You can specify by variant or use "all" for all variants
+    "Triphala Charcoal Soap": {
+      "100g": true,  // This variant is low in stock
+      "55g": false   // This variant has stock
+    },
+    "Lavender Calm": {
+      "all": true  // All variants are low in stock
+    },
+    "Keshamrit Hair Oil": {
+      "100ml": true
+    },
+    "Rose Lip Balm": {
+      "15g": true
+    }
+  }
+};
+
+/**
+ * Check if a product variant is low in stock
+ * @param {string} productName - Name of the product
+ * @param {string} variant - Variant (e.g., "100g", "10ml")
+ * @returns {boolean} - True if product is low in stock
+ */
+function isLowStock(productName, variant = null) {
+  if (!LOW_STOCK_CONFIG.enabled) return false;
+  if (!LOW_STOCK_CONFIG.lowStockProducts[productName]) return false;
+
+  const productStock = LOW_STOCK_CONFIG.lowStockProducts[productName];
+
+  // Check if all variants are marked low
+  if (productStock.all === true) return true;
+
+  // Check specific variant
+  if (variant && productStock[variant] === true) return true;
+
+  // If no variant specified, check if any variant is low
+  if (!variant) {
+    return Object.values(productStock).some(val => val === true);
+  }
+
+  return false;
+}
+
+// ============================================================================
 // HELPER FUNCTIONS
 // ============================================================================
 

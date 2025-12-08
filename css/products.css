@@ -297,3 +297,76 @@
   margin-left: 5px;
   font-weight: normal;
 }
+
+/* ============================================================================
+   LOW STOCK BADGE STYLES
+   ============================================================================ */
+
+.product-badge.low-stock {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 25px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  z-index: 3;
+  box-shadow: 0 4px 12px rgba(255, 107, 107, 0.4);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 4px 12px rgba(255, 107, 107, 0.4);
+  }
+  50% {
+    transform: scale(1.05);
+    box-shadow: 0 6px 16px rgba(255, 107, 107, 0.6);
+  }
+}
+
+.product-badge.low-stock i {
+  font-size: 0.9rem;
+  animation: blink 1.5s ease-in-out infinite;
+}
+
+@keyframes blink {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+/* When both sale and low stock badges exist */
+.product-image .product-badge.sale {
+  top: 1rem;
+  right: 1rem;
+}
+
+.product-image .product-badge.low-stock {
+  bottom: 1rem;
+  top: auto;
+  right: 1rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .product-badge.low-stock {
+    font-size: 0.75rem;
+    padding: 0.4rem 0.8rem;
+  }
+
+  .product-badge.low-stock i {
+    font-size: 0.8rem;
+  }
+}

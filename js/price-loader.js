@@ -132,6 +132,7 @@ function loadVariantPrices(productName, productItem, selectElement) {
   selectElement.addEventListener('change', function() {
     const newVariant = this.value;
     updatePriceDisplay(productName, newVariant, priceDisplay);
+    updateLowStockBadgeOnVariantChange(productName, this.value, productItem); 
 
     // Also update the selected option's data-price in case cart reads it
     const selectedOption = this.options[this.selectedIndex];
@@ -150,6 +151,84 @@ function loadVariantPrices(productName, productItem, selectElement) {
 
   selectElement.setAttribute('data-price-loaded', 'true');
 }
+
+// ============================================================================
+// LOW STOCK BADGE MANAGEMENT
+// ============================================================================
+
+/**
+ * Add low stock badges to products that are running low
+ */
+function addLowStockBadges() {
+  if (!LOW_STOCK_CONFIG || !LOW_STOCK_CONFIG.enabled) return;
+
+  const productItems = document.querySelectorAll('.product-item, .featured-product-card');
+
+  productItems.forEach(item => {
+    const productName = item.querySelector('.product-name, .featured-product-info h3')?.textContent.trim();
+    if (!productName) return;
+
+    // Get the variant if it exists
+    const variantSelect = item.querySelector('.variant-select');
+    let variant = null;
+
+    if (variantSelect) {
+      variant = variantSelect.value;
+    } else {
+      // For non-variant products, get the first variant
+      const variants = getProductVariants(productName);
+      if (variants) {
+        variant = Object.keys(variants)[0];
+      }
+    }
+
+    // Check if product is low in stock
+    if (isLowStock(productName, variant)) {
+      // Check if badge already exists
+      if (item.querySelector('.product-badge.low-stock')) return;
+
+      // Create and add badge
+      const badge = document.createElement('div');
+      badge.className = 'product-badge low-stock';
+      badge.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Low Stock';
+
+      // Find image container to position badge
+      const imageContainer = item.querySelector('.product-image, .featured-product-image');
+      if (imageContainer) {
+        imageContainer.style.position = 'relative';
+        imageContainer.appendChild(badge);
+      }
+    }
+  });
+}
+
+/**
+ * Update low stock badge when variant changes
+ */
+function updateLowStockBadgeOnVariantChange(productName, variant, productItem) {
+  if (!LOW_STOCK_CONFIG || !LOW_STOCK_CONFIG.enabled) return;
+
+  const imageContainer = productItem.querySelector('.product-image');
+  if (!imageContainer) return;
+
+  const existingBadge = imageContainer.querySelector('.product-badge.low-stock');
+
+  if (isLowStock(productName, variant)) {
+    // Add badge if it doesn't exist
+    if (!existingBadge) {
+      const badge = document.createElement('div');
+      badge.className = 'product-badge low-stock';
+      badge.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Low Stock';
+      imageContainer.appendChild(badge);
+    }
+  } else {
+    // Remove badge if variant is not low in stock
+    if (existingBadge) {
+      existingBadge.remove();
+    }
+  }
+}
+
 /**
  * Update price display with sale strikethrough support
  */
@@ -361,6 +440,8 @@ function highlightPriceUpdates(showAlert = false) {
   return updates;
 }
 
+
+
 // ============================================================================
 // REAL-TIME PRICE UPDATES (for admin/development)
 // ============================================================================
@@ -498,12 +579,14 @@ function showAdminPanel() {
 // MAKE FUNCTIONS GLOBALLY AVAILABLE
 // ============================================================================
 
+// Add to window.PriceLoader object
 window.PriceLoader = {
   loadAllPrices,
   verifyAllPrices,
   highlightPriceUpdates,
   exportPricesToCSV,
   addSaleBadges,
+  addLowStockBadges,  // Add this
   enableLivePriceUpdates,
   showAdminPanel
 };
@@ -517,9 +600,15 @@ console.log('🔧 Use PriceLoader.showAdminPanel() for price management tools');
 console.log('📊 Use PriceLoader.verifyAllPrices() to check if all prices loaded');
 
 // Automatically add sale badges if sales are active
-if (SALE_CONFIG?.enabled) {
+if (SALE_CONFIG?.enabled || LOW_STOCK_CONFIG?.enabled) {
   setTimeout(() => {
-    addSaleBadges();
-    console.log('🎉 Sale badges added automatically');
+    if (SALE_CONFIG?.enabled) {
+      addSaleBadges();
+      console.log('🎉 Sale badges added automatically');
+    }
+    if (LOW_STOCK_CONFIG?.enabled) {
+      addLowStockBadges();
+      console.log('⚠️ Low stock badges added automatically');
+    }
   }, 100);
 }
