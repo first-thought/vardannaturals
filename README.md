@@ -6,7 +6,7 @@ A beautiful, responsive website for Vardan Naturals - showcasing a holistic rang
 
 ## 🌿 About
 
-Vardan Naturals is an e-commerce website featuring premium Ayurvedic products including pain relief solutions, hair care, skincare, artisan soaps, bath salts, essential oils, and herbal teas. The website emphasizes natural ingredients, traditional Ayurvedic wisdom, and modern wellness practices.
+Vardan Naturals is an e-commerce website featuring premium Ayurvedic products including body wellness oils, hair care, skincare, artisan soaps, bath salts, essential oils, and herbal teas. The website emphasizes natural ingredients, traditional Ayurvedic wisdom, and modern wellness practices.
 
 **Tagline:** *from nature, with care*
 
@@ -195,33 +195,9 @@ Example:
 </div>
 ```
 
-### Add Image Carousel for Variants
-
-For products with multiple variants (like lip balms):
-```html
-<div class="product-image">
-    <div class="image-carousel" id="unique-carousel-id">
-        <div class="carousel-images">
-            <div class="carousel-slide">
-                <img src="images/variant1.jpg" alt="Variant 1">
-            </div>
-            <div class="carousel-slide">
-                <img src="images/variant2.jpg" alt="Variant 2">
-            </div>
-        </div>
-        <button class="carousel-btn prev" onclick="moveCarousel('unique-carousel-id', -1)">‹</button>
-        <button class="carousel-btn next" onclick="moveCarousel('unique-carousel-id', 1)">›</button>
-        <div class="carousel-indicators">
-            <button class="carousel-indicator active" onclick="goToSlide('unique-carousel-id', 0)"></button>
-            <button class="carousel-indicator" onclick="goToSlide('unique-carousel-id', 1)"></button>
-        </div>
-    </div>
-</div>
-```
-
 ## 📱 Product Categories
 
-1. **Pain Relief Solutions** - Ayurvedic massage oils and potli
+1. **Body Wellness Oils** - Ayurvedic massage oils and potli
 2. **Hair Care Excellence** - Hair oils for nourishment and dandruff control
 3. **Radiant Skin Care** - Face oils, moisturizers, face washes, gels
 4. **Artisan Soaps Collection** - Organic handmade soaps

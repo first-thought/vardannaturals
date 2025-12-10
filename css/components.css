@@ -1,4 +1,9 @@
-/* Image Carousel Styles */
+/* ===================================
+   COMPONENTS.CSS - Reusable Components
+   =================================== */
+
+/* ----- IMAGE CAROUSEL ----- */
+
 .image-carousel {
   height: 100%;
   min-height: 550px;
@@ -97,18 +102,9 @@
   width: 30px;
 }
 
-@media (max-width: 768px) {
-  .image-carousel {
-    min-height: 300px;
-  }
 
-  .carousel-btn {
-    height: 35px;
-    width: 35px;
-  }
-}
+/* ----- DROPDOWN MENU ----- */
 
-/* Dropdown Menu Styles */
 .dropdown {
   position: relative;
 }
@@ -164,8 +160,132 @@
   padding-left: 2rem;
 }
 
-/* Mobile dropdown */
+
+/* ----- BUTTONS ----- */
+
+.btn {
+  align-items: center;
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  display: inline-flex;
+  font-size: 1rem;
+  font-weight: 600;
+  gap: 0.8rem;
+  padding: 1rem 2rem;
+  text-decoration: none;
+  transition: all 0.3s;
+}
+
+.btn-primary {
+  background: #2c5f2d;
+  color: white;
+}
+
+.btn-primary:hover {
+  background: #1a3a1b;
+  transform: translateY(-2px);
+}
+
+.btn-whatsapp,
+.whatsapp-order-btn {
+  align-items: center;
+  background: #25D366;
+  border: none;
+  border-radius: 50px;
+  box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3);
+  color: white;
+  cursor: pointer;
+  display: inline-flex;
+  font-size: 1rem;
+  font-weight: 600;
+  gap: 0.8rem;
+  padding: 1rem 2rem;
+  text-decoration: none;
+  transition: all 0.3s;
+}
+
+.btn-whatsapp:hover,
+.whatsapp-order-btn:hover {
+  background: #128C7E;
+  box-shadow: 0 6px 20px rgba(37, 211, 102, 0.4);
+  transform: translateY(-2px);
+}
+
+.whatsapp-order-btn img {
+  height: 24px;
+  width: 24px;
+}
+
+
+/* ----- CARDS ----- */
+
+.card {
+  background: white;
+  border: 1px solid #e8e5e0;
+  border-radius: 15px;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  transition: all 0.3s;
+}
+
+.card:hover {
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  transform: translateY(-5px);
+}
+
+
+/* ----- VARIANT SELECT ----- */
+
+.variant-select {
+  width: 100%;
+  padding: 0.8rem 1.2rem;
+  font-size: 1rem;
+  color: #3a3a3a;
+  background: white;
+  border: 2px solid #e8e5e0;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s;
+  font-family: 'Cormorant Garamond', 'Georgia', serif;
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%232c5f2d' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  background-size: 1.2rem;
+  padding-right: 3rem;
+}
+
+.variant-select:hover {
+  border-color: #2c5f2d;
+  box-shadow: 0 2px 8px rgba(44, 95, 45, 0.1);
+}
+
+.variant-select:focus {
+  outline: none;
+  border-color: #2c5f2d;
+  box-shadow: 0 0 0 3px rgba(44, 95, 45, 0.1);
+}
+
+.variant-select option {
+  padding: 0.8rem;
+  font-size: 1rem;
+}
+
+
+/* ----- RESPONSIVE ----- */
+
 @media (max-width: 768px) {
+  .image-carousel {
+    min-height: 300px;
+  }
+
+  .carousel-btn {
+    height: 35px;
+    width: 35px;
+  }
+
+  /* Mobile dropdown */
   .dropdown-content {
     background: #f8f9fa;
     border: none;
@@ -183,4 +303,114 @@
     font-size: 0.75rem;
     padding: 0.7rem 1rem;
   }
+
+  .whatsapp-order-btn {
+    font-size: 0.9rem;
+    padding: 0.8rem 1.5rem;
+  }
+
+  .variant-select {
+    padding: 0.7rem 1rem;
+    font-size: 0.95rem;
+    padding-right: 2.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .variant-select {
+    padding: 0.6rem 0.8rem;
+    font-size: 0.9rem;
+  }
+}
+
+.announcement-bar {
+  background: linear-gradient(135deg, #2c5f2d 0%, #4a7c59 100%);
+  color: white;
+  text-align: center;
+  padding: 0.8rem 2rem;
+  font-size: 0.95rem;
+  position: relative;
+  z-index: 1001;
+}
+
+.announcement-bar p {
+  margin: 0;
+  font-weight: 400;
+}
+
+.announcement-bar strong {
+  font-weight: 700;
+}
+
+.announcement-bar a {
+  color: white;
+  text-decoration: underline;
+  font-weight: 600;
+  margin-left: 1rem;
+}
+
+.announcement-bar a:hover {
+  color: #fee140;
+}
+
+/* Optional: Close button */
+.announcement-bar .close-btn {
+  position: absolute;
+  right: 2rem;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: white;
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 0.5rem;
+}
+
+.deal-modal {
+  display: none;
+  position: fixed;
+  z-index: 9999;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  justify-content: center;
+  align-items: center;
+}
+
+.deal-modal-content {
+  background: white;
+  padding: 3rem;
+  border-radius: 20px;
+  text-align: center;
+  max-width: 500px;
+  position: relative;
+  animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+  from { transform: translateY(-50px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.close-modal {
+  position: absolute;
+  right: 1.5rem;
+  top: 1rem;
+  font-size: 2rem;
+  cursor: pointer;
+  color: #6a6a6a;
+}
+
+.deal-modal-btn {
+  display: inline-block;
+  background: #2c5f2d;
+  color: white;
+  padding: 1rem 2.5rem;
+  border-radius: 50px;
+  text-decoration: none;
+  font-weight: 600;
+  margin-top: 1.5rem;
 }
