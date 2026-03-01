@@ -89,7 +89,7 @@ function loadCart() {
     priceText: item.priceText || item.price || item.priceText || (item.price ? formatPriceText(parsePriceToNumber(item.price)) : '₹0'),
     // also keep numeric price if present as price (legacy)
     price: (item.price && !isNaN(Number(item.price))) ? Number(item.price) : parsePriceToNumber(item.priceText || item.priceText),
-    image: item.image || 'images/placeholder.jpg',
+    image: item.image || 'images/vardan-naturals-logo.png',
     quantity: Number(item.quantity || 1),
     addedAt: item.addedAt || new Date().toISOString()
   }));
@@ -237,7 +237,7 @@ function addToCart(arg1, arg2, arg3, arg4) {
       variant: variant,
       priceText: priceText,
       price: numericPrice,
-      image: image || 'images/placeholder.jpg',
+      image: image || 'images/vardan-naturals-logo.png',
       quantity: 1,
       addedAt: new Date().toISOString()
     });
@@ -340,7 +340,7 @@ function renderCartPage() {
     const itemTotal = Math.round(num * (Number(item.quantity) || 0));
     return `
       <div class="cart-item">
-        <img src="${item.image || 'images/placeholder.jpg'}" alt="${escapeHtml(item.name)}" class="cart-item-image" onerror="this.src='images/placeholder.jpg'">
+        <img src="${item.image || 'images/vardan-naturals-logo.png'}" alt="${escapeHtml(item.name)}" class="cart-item-image" onerror="this.src='images/vardan-naturals-logo.png'">
         <div class="cart-item-details">
           <div class="cart-item-name">${escapeHtml(item.name)}</div>
           ${item.variant && item.variant !== 'default' ? `<div class="cart-item-variant">${escapeHtml(item.variant)}</div>` : ''}

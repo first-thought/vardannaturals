@@ -13,20 +13,19 @@ const PRODUCT_PRICES = {
     // SOAPS
     // ========================================
     "Shea Butter Soap": {
-      "100g": 249,
-      "55g": 170
+      "100g": 249
     },
     "Triphala Charcoal Soap": {
-      "100g": 225,
-      "55g": 150
+      "100g": 225
     },
     "Citrus Loofah Soap": {
-      "100g": 200,
-      "55g": 140
+      "100g": 200
     },
     "Goat Milk Soap": {
-      "100g": 275,
-      "55g": 190
+      "100g": 275
+    },
+    "Chandan Glow Soap": {
+      "100g": 199
     },
 
     // ========================================
@@ -155,6 +154,9 @@ const PRODUCT_PRICES = {
     "Crack Cream": {
       "30g": 299
     },
+    "Rapid Relief Balm": {
+      "30g": 299
+    },
     "Rose Lip Balm": {
       "15g": 249
     },
@@ -191,8 +193,7 @@ const SALE_CONFIG = {
   saleProducts: {
     //Example: Add sale prices here when running promotions
     "Shea Butter Soap": {
-      "100g": 199,  // 20% off from 249
-      "55g": 136    // 20% off from 170
+      "100g": 199   // 20% off from 249
     },
     "Citrus Bliss": {
       "200g": 249,
@@ -214,8 +215,7 @@ const LOW_STOCK_CONFIG = {
     // Add products that are running low in stock
     // You can specify by variant or use "all" for all variants
     "Triphala Charcoal Soap": {
-      "100g": true,  // This variant is low in stock
-      "55g": false   // This variant has stock
+      "100g": true   // This variant is low in stock
     },
     "Lavender Calm": {
       "all": true  // All variants are low in stock
