@@ -185,25 +185,35 @@ const PRODUCT_PRICES = {
   };
 
 // ============================================================================
-// SALE CONFIGURATION (Optional - Enable/Disable sales)
+// GLOBAL SALE CONFIGURATION (Holi sale - 10% off sitewide)
+// ============================================================================
+
+const GLOBAL_SALE = {
+  enabled: true, // Turn Holi sale on/off
+  percent: 10,
+  name: 'Holi Sale',
+  description: '10% off sitewide + free gift with every order'
+};
+
+// ============================================================================
+// SALE CONFIGURATION (used by price loader & badges)
 // ============================================================================
 
 const SALE_CONFIG = {
-  enabled: false,  // Set to true to activate sale prices
-  saleProducts: {
-    //Example: Add sale prices here when running promotions
-    "Shea Butter Soap": {
-      "100g": 199   // 20% off from 249
-    },
-    "Citrus Bliss": {
-      "200g": 249,
-      "400g": 459
-    },
-    "Kumkumadi Tailam": {
-      "30ml": 599
-    }
-  }
+  enabled: GLOBAL_SALE.enabled,
+  saleProducts: {}
 };
+
+// Build sale prices dynamically for all products when a global sale is active
+if (GLOBAL_SALE.enabled) {
+  Object.entries(PRODUCT_PRICES).forEach(([productName, variants]) => {
+    SALE_CONFIG.saleProducts[productName] = {};
+    Object.entries(variants).forEach(([variant, basePrice]) => {
+      const discounted = Math.round(basePrice * (1 - GLOBAL_SALE.percent / 100));
+      SALE_CONFIG.saleProducts[productName][variant] = discounted;
+    });
+  });
+}
 
 // ============================================================================
 // LOW STOCK CONFIGURATION
@@ -410,7 +420,8 @@ window.VardanPrices = {
   searchProducts,
   // Direct access to config (read-only in production)
   PRODUCT_PRICES,
-  SALE_CONFIG
+  SALE_CONFIG,
+  GLOBAL_SALE
 };
 
 

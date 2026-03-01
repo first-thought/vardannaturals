@@ -426,6 +426,7 @@ function checkoutWhatsApp() {
 
   message += `───────────────\n`;
   message += `*Total Amount: ₹${total.toFixed(0)}*\n\n`;
+  message += `Holi Offer: 10% off sitewide already applied + Free gift with every order.\n\n`;
   message += `Please confirm availability and payment details. Thank you! 🙏`;
 
   const whatsappURL = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
