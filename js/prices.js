@@ -189,10 +189,34 @@ const PRODUCT_PRICES = {
 // ============================================================================
 
 const GLOBAL_SALE = {
-  enabled: true, // Turn Holi sale on/off
+  enabled: false, // Turn Holi sale on/off
   percent: 10,
   name: 'Holi Sale',
   description: '10% off sitewide + free gift with every order'
+};
+
+// ============================================================================
+// COUPON CONFIGURATION
+// ============================================================================
+
+// Define all coupons in one place
+// expiry should be an ISO date string (YYYY-MM-DD) in local time
+const COUPONS = {
+  // Example: 10% off, valid till 31 March 2026
+  HOLI10: {
+    type: 'percent',
+    value: 10,
+    expiry: '2026-03-31',
+    active: false,
+    description: '10% off on your order'
+  },
+  CHINKY15: {
+    type: 'percent',
+    value: 15,
+    expiry: '2026-03-31',
+    active: false,
+    description: '15% off on your order'
+  }
 };
 
 // ============================================================================

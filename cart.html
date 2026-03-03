@@ -76,9 +76,29 @@
         <div class="cart-summary-card">
           <h2>Order Summary</h2>
 
+          <div class="summary-row coupon-row">
+            <span>Coupon:</span>
+            <div class="coupon-input-wrapper">
+              <input type="text" id="couponCodeInput" placeholder="Enter coupon code" />
+              <button
+                type="button"
+                onclick="applyCoupon()"
+                class="coupon-apply-btn"
+                id="couponApplyBtn"
+                disabled>
+                Apply
+              </button>
+            </div>
+          </div>
+
           <div class="summary-row">
             <span>Subtotal:</span>
             <span id="subtotal">₹0</span>
+          </div>
+
+          <div class="summary-row">
+            <span>Discount:</span>
+            <span id="discountAmount">₹0</span>
           </div>
 
           <div class="summary-row">
