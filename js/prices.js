@@ -13,20 +13,19 @@ const PRODUCT_PRICES = {
     // SOAPS
     // ========================================
     "Shea Butter Soap": {
-      "100g": 249,
-      "55g": 170
+      "100g": 249
     },
     "Triphala Charcoal Soap": {
-      "100g": 225,
-      "55g": 150
+      "100g": 225
     },
     "Citrus Loofah Soap": {
-      "100g": 200,
-      "55g": 140
+      "100g": 200
     },
     "Goat Milk Soap": {
-      "100g": 275,
-      "55g": 190
+      "100g": 275
+    },
+    "Chandan Glow Soap": {
+      "100g": 199
     },
 
     // ========================================
@@ -155,6 +154,9 @@ const PRODUCT_PRICES = {
     "Crack Cream": {
       "30g": 299
     },
+    "Rapid Relief Balm": {
+      "30g": 299
+    },
     "Rose Lip Balm": {
       "15g": 249
     },
@@ -183,26 +185,59 @@ const PRODUCT_PRICES = {
   };
 
 // ============================================================================
-// SALE CONFIGURATION (Optional - Enable/Disable sales)
+// GLOBAL SALE CONFIGURATION (Holi sale - 10% off sitewide)
+// ============================================================================
+
+const GLOBAL_SALE = {
+  enabled: false, // Turn Holi sale on/off
+  percent: 10,
+  name: 'Holi Sale',
+  description: '10% off sitewide + free gift with every order'
+};
+
+// ============================================================================
+// COUPON CONFIGURATION
+// ============================================================================
+
+// Define all coupons in one place
+// expiry should be an ISO date string (YYYY-MM-DD) in local time
+const COUPONS = {
+  // Example: 10% off, valid till 31 March 2026
+  HOLI10: {
+    type: 'percent',
+    value: 10,
+    expiry: '2026-03-31',
+    active: false,
+    description: '10% off on your order'
+  },
+  CHINKY15: {
+    type: 'percent',
+    value: 15,
+    expiry: '2026-03-31',
+    active: false,
+    description: '15% off on your order'
+  }
+};
+
+// ============================================================================
+// SALE CONFIGURATION (used by price loader & badges)
 // ============================================================================
 
 const SALE_CONFIG = {
-  enabled: false,  // Set to true to activate sale prices
-  saleProducts: {
-    //Example: Add sale prices here when running promotions
-    "Shea Butter Soap": {
-      "100g": 199,  // 20% off from 249
-      "55g": 136    // 20% off from 170
-    },
-    "Citrus Bliss": {
-      "200g": 249,
-      "400g": 459
-    },
-    "Kumkumadi Tailam": {
-      "30ml": 599
-    }
-  }
+  enabled: GLOBAL_SALE.enabled,
+  saleProducts: {}
 };
+
+// Build sale prices dynamically for all products when a global sale is active
+if (GLOBAL_SALE.enabled) {
+  Object.entries(PRODUCT_PRICES).forEach(([productName, variants]) => {
+    SALE_CONFIG.saleProducts[productName] = {};
+    Object.entries(variants).forEach(([variant, basePrice]) => {
+      const discounted = Math.round(basePrice * (1 - GLOBAL_SALE.percent / 100));
+      SALE_CONFIG.saleProducts[productName][variant] = discounted;
+    });
+  });
+}
 
 // ============================================================================
 // LOW STOCK CONFIGURATION
@@ -214,8 +249,7 @@ const LOW_STOCK_CONFIG = {
     // Add products that are running low in stock
     // You can specify by variant or use "all" for all variants
     "Triphala Charcoal Soap": {
-      "100g": true,  // This variant is low in stock
-      "55g": false   // This variant has stock
+      "100g": true   // This variant is low in stock
     },
     "Lavender Calm": {
       "all": true  // All variants are low in stock
@@ -410,7 +444,8 @@ window.VardanPrices = {
   searchProducts,
   // Direct access to config (read-only in production)
   PRODUCT_PRICES,
-  SALE_CONFIG
+  SALE_CONFIG,
+  GLOBAL_SALE
 };
 
 

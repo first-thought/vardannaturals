@@ -20,6 +20,7 @@ const WHATSAPP_NUMBER = '918077775729'; // change if needed
 // Internal state
 // ===============================
 let cart = [];
+let appliedCoupon = null; // { code, discountAmount, percent } or null
 
 // ===============================
 // Utilities
@@ -89,7 +90,7 @@ function loadCart() {
     priceText: item.priceText || item.price || item.priceText || (item.price ? formatPriceText(parsePriceToNumber(item.price)) : '₹0'),
     // also keep numeric price if present as price (legacy)
     price: (item.price && !isNaN(Number(item.price))) ? Number(item.price) : parsePriceToNumber(item.priceText || item.priceText),
-    image: item.image || 'images/placeholder.jpg',
+    image: item.image || 'images/vardan-naturals-logo.png',
     quantity: Number(item.quantity || 1),
     addedAt: item.addedAt || new Date().toISOString()
   }));
@@ -237,7 +238,7 @@ function addToCart(arg1, arg2, arg3, arg4) {
       variant: variant,
       priceText: priceText,
       price: numericPrice,
-      image: image || 'images/placeholder.jpg',
+      image: image || 'images/vardan-naturals-logo.png',
       quantity: 1,
       addedAt: new Date().toISOString()
     });
@@ -296,6 +297,16 @@ function calculateTotal() {
   }, 0);
 }
 
+// Apply coupon to a given subtotal (numeric)
+function applyCouponToSubtotal(subtotal) {
+  if (!appliedCoupon) return { discount: 0, total: subtotal };
+  const discount = Math.round(subtotal * (appliedCoupon.percent / 100));
+  return {
+    discount,
+    total: Math.max(0, subtotal - discount)
+  };
+}
+
 function updateCartCount() {
   const totalItems = cart.reduce((s, i) => s + Number(i.quantity || 0), 0);
   const els = document.querySelectorAll('#navCartCount, .cart-count, #cartCount');
@@ -340,7 +351,7 @@ function renderCartPage() {
     const itemTotal = Math.round(num * (Number(item.quantity) || 0));
     return `
       <div class="cart-item">
-        <img src="${item.image || 'images/placeholder.jpg'}" alt="${escapeHtml(item.name)}" class="cart-item-image" onerror="this.src='images/placeholder.jpg'">
+        <img src="${item.image || 'images/vardan-naturals-logo.png'}" alt="${escapeHtml(item.name)}" class="cart-item-image" onerror="this.src='images/vardan-naturals-logo.png'">
         <div class="cart-item-details">
           <div class="cart-item-name">${escapeHtml(item.name)}</div>
           ${item.variant && item.variant !== 'default' ? `<div class="cart-item-variant">${escapeHtml(item.variant)}</div>` : ''}
@@ -364,9 +375,14 @@ function renderCartPage() {
   container.innerHTML = html;
 
   // Update totals
-  const total = Math.round(calculateTotal());
-  if (subtotalEl) subtotalEl.textContent = `₹${total.toFixed(0)}`;
+  const subtotal = Math.round(calculateTotal());
+  const { discount, total } = applyCouponToSubtotal(subtotal);
+
+  if (subtotalEl) subtotalEl.textContent = `₹${subtotal.toFixed(0)}`;
   if (totalEl) totalEl.textContent = `₹${total.toFixed(0)}`;
+
+  const discountEl = document.getElementById('discountAmount');
+  if (discountEl) discountEl.textContent = `₹${discount.toFixed(0)}`;
 
   // enable checkout
   const checkoutBtn = document.getElementById('checkoutBtn');
@@ -424,8 +440,15 @@ function checkoutWhatsApp() {
     return sum + num * (item.quantity || 0);
   }, 0);
 
+  const roundedSubtotal = Math.round(total);
+  const { discount, total: finalTotal } = applyCouponToSubtotal(roundedSubtotal);
+
   message += `───────────────\n`;
-  message += `*Total Amount: ₹${total.toFixed(0)}*\n\n`;
+  message += `Subtotal: ₹${roundedSubtotal.toFixed(0)}\n`;
+  if (appliedCoupon && discount > 0) {
+    message += `Coupon (${appliedCoupon.code}): -₹${discount.toFixed(0)}\n`;
+  }
+  message += `*Total Amount: ₹${finalTotal.toFixed(0)}*\n\n`;
   message += `Please confirm availability and payment details. Thank you! 🙏`;
 
   const whatsappURL = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
@@ -614,6 +637,38 @@ function setupOutsideClickClose() {
 // ===============================
 function initCartSystem() {
   loadCart();
+  // Try to restore coupon from localStorage if present
+  try {
+    const stored = localStorage.getItem('vardanCoupon');
+    if (stored) {
+      const parsed = JSON.parse(stored);
+      // Basic shape check
+      if (parsed && parsed.code && parsed.percent) {
+        appliedCoupon = parsed;
+      }
+    }
+  } catch (e) {
+    console.warn('Failed to restore coupon from storage', e);
+  }
+
+  // Wire coupon input to enable/disable Apply button
+  const couponInput = document.getElementById('couponCodeInput');
+  const couponBtn = document.getElementById('couponApplyBtn');
+  if (couponInput && couponBtn) {
+    // If we restored a coupon, pre-fill the code
+    if (appliedCoupon && appliedCoupon.code) {
+      couponInput.value = appliedCoupon.code;
+    }
+
+    const updateCouponButtonState = () => {
+      const hasValue = (couponInput.value || '').trim().length > 0;
+      couponBtn.disabled = !hasValue;
+      couponBtn.classList.toggle('disabled', !hasValue);
+    };
+
+    couponInput.addEventListener('input', updateCouponButtonState);
+    updateCouponButtonState();
+  }
   migrateInlineAddToCart(document);
   initGenericAddToCart(document);
   setupOutsideClickClose();
@@ -647,5 +702,72 @@ window.loadCart = loadCart;
 window.renderCartPage = renderCartPage;
 window.checkoutWhatsApp = checkoutWhatsApp;
 window.updateCartCount = updateCartCount;
+
+// ===============================
+// Coupon API (global for inline handlers)
+// ===============================
+
+function applyCoupon() {
+  const input = document.getElementById('couponCodeInput');
+  if (!input) {
+    alert('Coupon input not found.');
+    return;
+  }
+
+  const rawCode = (input.value || '').trim().toUpperCase();
+  if (!rawCode) {
+    alert('Please enter a coupon code.');
+    return;
+  }
+
+  if (typeof COUPONS === 'undefined' || !COUPONS[rawCode]) {
+    alert('Invalid coupon code.');
+    appliedCoupon = null;
+    localStorage.removeItem('vardanCoupon');
+    renderCartPage();
+    return;
+  }
+
+  const coupon = COUPONS[rawCode];
+  if (!coupon.active) {
+    alert('This coupon is no longer active.');
+    appliedCoupon = null;
+    localStorage.removeItem('vardanCoupon');
+    renderCartPage();
+    return;
+  }
+
+  if (coupon.expiry) {
+    const today = new Date();
+    // Compare dates at local midnight
+    const expiryDate = new Date(coupon.expiry + 'T23:59:59');
+    if (today > expiryDate) {
+      alert('This coupon has expired.');
+      appliedCoupon = null;
+      localStorage.removeItem('vardanCoupon');
+      renderCartPage();
+      return;
+    }
+  }
+
+  if (coupon.type !== 'percent' || !coupon.value || isNaN(coupon.value)) {
+    alert('This coupon is not configured correctly.');
+    return;
+  }
+
+  appliedCoupon = {
+    code: rawCode,
+    percent: Number(coupon.value)
+  };
+
+  try {
+    localStorage.setItem('vardanCoupon', JSON.stringify(appliedCoupon));
+  } catch (e) {
+    console.warn('Failed to persist coupon', e);
+  }
+
+  showCartNotification(`Coupon ${rawCode} applied successfully.`);
+  renderCartPage();
+}
 
 console.log('🛒 Unified cart.js loaded — centralized price support enabled if prices.js provides getPrice()');
