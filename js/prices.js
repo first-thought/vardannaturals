@@ -210,12 +210,12 @@ const COUPONS = {
     active: false,
     description: '10% off on your order'
   },
-  CHINKY15: {
+  SUPERWOMAN15: {
     type: 'percent',
     value: 15,
-    expiry: '2026-03-31',
-    active: false,
-    description: '15% off on your order'
+    expiry: '2026-03-09',
+    active: true,
+    description: '15% off on your order on account of International Women\'s Day'
   }
 };
 
