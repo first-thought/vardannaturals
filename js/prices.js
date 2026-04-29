@@ -49,6 +49,19 @@ const PRODUCT_PRICES = {
     },
 
     // ========================================
+    // BODY & HAND WASH
+    // ========================================
+    "Body Wash": {
+      "default": 0
+    },
+    "Hand Wash Variant 1": {
+      "default": 0
+    },
+    "Hand Wash Variant 2": {
+      "default": 0
+    },
+
+    // ========================================
     // BODY WELLNESS OILS
     // ========================================
     "Mahanarayana Tailam": {
@@ -171,6 +184,40 @@ const PRODUCT_PRICES = {
     },
 
     // ========================================
+    // PERFUMES & CHAKRA ROLL-ONS
+    // ========================================
+    "Solid Perfume Variant 1": {
+      "default": 0
+    },
+    "Solid Perfume Variant 2": {
+      "default": 0
+    },
+    "Root Chakra Roll-On": {
+      "default": 0
+    },
+    "Sacral Chakra Roll-On": {
+      "default": 0
+    },
+    "Solar Plexus Chakra Roll-On": {
+      "default": 0
+    },
+    "Heart Chakra Roll-On": {
+      "default": 0
+    },
+    "Throat Chakra Roll-On": {
+      "default": 0
+    },
+    "Third Eye Chakra Roll-On": {
+      "default": 0
+    },
+    "Crown Chakra Roll-On": {
+      "default": 0
+    },
+    "Complete 7 Chakra Roll-On Set": {
+      "default": 0
+    },
+
+    // ========================================
     // WELLNESS TOOLS
     // ========================================
     "Pain Relief Ayurvedic Massage Potli": {
@@ -200,20 +247,22 @@ const GLOBAL_SALE = {
 // ============================================================================
 
 // Define all coupons in one place
-// expiry should be an ISO date string (YYYY-MM-DD) in local time
+// start/expiry should be ISO date strings (YYYY-MM-DD) in local time
 const COUPONS = {
   // Example: 10% off, valid till 31 March 2026
   HOLI10: {
     type: 'percent',
     value: 10,
     expiry: '2026-03-31',
+    start: '2026-03-01',
     active: false,
     description: '10% off on your order'
   },
   SUPERWOMAN15: {
     type: 'percent',
     value: 15,
-    expiry: '2026-03-09',
+    start: '2026-04-01',
+    expiry: '2026-12-31',
     active: true,
     description: '15% off on your order on account of International Women\'s Day'
   }
