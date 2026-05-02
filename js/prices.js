@@ -9,6 +9,50 @@
   // ============================================================================
 
 const PRODUCT_PRICES = {
+
+  // ========================================
+// BATH AND BODY Rituals
+// ========================================
+
+"Oudh Kesar Elixir": {
+  "300ml": 599
+},
+
+"Lemon Zest": {
+  "250ml": 299
+},
+
+"Lavender Bloom": {
+  "250ml": 299
+},
+
+  // ========================================
+// CURATED RITUALS
+// ========================================
+
+"The Deep Relief Ritual": {
+  "default": 1049
+},
+
+"The Radiance Ritual": {
+  "default": 1999
+},
+
+"The Abhyanga Ritual Box": {
+  "default": 2199
+},
+
+"The Glow & Nourish Ritual": {
+  "default": 1249
+},
+
+"The Weekend Reset Ritual": {
+  "default": 1399
+},
+
+"The Everyday Kit": {
+  "default": 1149
+},
     // ========================================
     // SOAPS
     // ========================================
@@ -110,25 +154,6 @@ const PRODUCT_PRICES = {
     },
 
     // ========================================
-    // ESSENTIAL OILS
-    // ========================================
-    "Jasmine Essential Oil": {
-      "10ml": 399
-    },
-    "Lavender Essential Oil": {
-      "10ml": 399
-    },
-    "Lemongrass Essential Oil": {
-      "10ml": 399
-    },
-    "Green Apple Essential Oil": {
-      "10ml": 399
-    },
-    "Citrus Essential Oil": {
-      "10ml": 399
-    },
-
-    // ========================================
     // HERBAL TEA
     // ========================================
     "Hibiscus Tea": {
@@ -148,13 +173,7 @@ const PRODUCT_PRICES = {
       "20g": 299
     },
 
-    // ========================================
-    // GUT CARE
-    // ========================================
-    "Natural Digestive Support": {
-      "60g": 145
-    },
-
+  
     // ========================================
     // WELLNESS & SPECIALTY CARE
     // ========================================
@@ -250,13 +269,13 @@ const GLOBAL_SALE = {
 // start/expiry should be ISO date strings (YYYY-MM-DD) in local time
 const COUPONS = {
   // Example: 10% off, valid till 31 March 2026
-  HOLI10: {
+  MAA15: {
     type: 'percent',
-    value: 10,
-    expiry: '2026-03-31',
-    start: '2026-03-01',
-    active: false,
-    description: '10% off on your order'
+    value: 15,
+    expiry: '2026-05-10',
+    start: '2026-05-02',
+    active: true,
+    description: '15% off on your order'
   },
   SUPERWOMAN15: {
     type: 'percent',
