@@ -9,6 +9,50 @@
   // ============================================================================
 
 const PRODUCT_PRICES = {
+
+  // ========================================
+// BATH AND BODY Rituals
+// ========================================
+
+"Oudh Kesar Elixir": {
+  "300ml": 599
+},
+
+"Lemon Zest": {
+  "250ml": 299
+},
+
+"Lavender Bloom": {
+  "250ml": 299
+},
+
+  // ========================================
+// CURATED RITUALS
+// ========================================
+
+"The Deep Relief Ritual": {
+  "default": 1049
+},
+
+"The Radiance Ritual": {
+  "default": 1999
+},
+
+"The Abhyanga Ritual Box": {
+  "default": 2199
+},
+
+"The Glow & Nourish Ritual": {
+  "default": 1249
+},
+
+"The Weekend Reset Ritual": {
+  "default": 1399
+},
+
+"The Everyday Kit": {
+  "default": 1149
+},
     // ========================================
     // SOAPS
     // ========================================
@@ -46,6 +90,19 @@ const PRODUCT_PRICES = {
     "Citrus Bliss": {
       "200g": 299,
       "400g": 499
+    },
+
+    // ========================================
+    // BODY & HAND WASH
+    // ========================================
+    "Body Wash": {
+      "default": 0
+    },
+    "Hand Wash Variant 1": {
+      "default": 0
+    },
+    "Hand Wash Variant 2": {
+      "default": 0
     },
 
     // ========================================
@@ -97,25 +154,6 @@ const PRODUCT_PRICES = {
     },
 
     // ========================================
-    // ESSENTIAL OILS
-    // ========================================
-    "Jasmine Essential Oil": {
-      "10ml": 399
-    },
-    "Lavender Essential Oil": {
-      "10ml": 399
-    },
-    "Lemongrass Essential Oil": {
-      "10ml": 399
-    },
-    "Green Apple Essential Oil": {
-      "10ml": 399
-    },
-    "Citrus Essential Oil": {
-      "10ml": 399
-    },
-
-    // ========================================
     // HERBAL TEA
     // ========================================
     "Hibiscus Tea": {
@@ -135,13 +173,7 @@ const PRODUCT_PRICES = {
       "20g": 299
     },
 
-    // ========================================
-    // GUT CARE
-    // ========================================
-    "Natural Digestive Support": {
-      "60g": 145
-    },
-
+  
     // ========================================
     // WELLNESS & SPECIALTY CARE
     // ========================================
@@ -168,6 +200,40 @@ const PRODUCT_PRICES = {
     },
     "Lavender Calm Wardrobe Sachet": {
       "100g": 349
+    },
+
+    // ========================================
+    // PERFUMES & CHAKRA ROLL-ONS
+    // ========================================
+    "Solid Perfume Variant 1": {
+      "default": 0
+    },
+    "Solid Perfume Variant 2": {
+      "default": 0
+    },
+    "Root Chakra Roll-On": {
+      "default": 0
+    },
+    "Sacral Chakra Roll-On": {
+      "default": 0
+    },
+    "Solar Plexus Chakra Roll-On": {
+      "default": 0
+    },
+    "Heart Chakra Roll-On": {
+      "default": 0
+    },
+    "Throat Chakra Roll-On": {
+      "default": 0
+    },
+    "Third Eye Chakra Roll-On": {
+      "default": 0
+    },
+    "Crown Chakra Roll-On": {
+      "default": 0
+    },
+    "Complete 7 Chakra Roll-On Set": {
+      "default": 0
     },
 
     // ========================================
@@ -200,20 +266,22 @@ const GLOBAL_SALE = {
 // ============================================================================
 
 // Define all coupons in one place
-// expiry should be an ISO date string (YYYY-MM-DD) in local time
+// start/expiry should be ISO date strings (YYYY-MM-DD) in local time
 const COUPONS = {
   // Example: 10% off, valid till 31 March 2026
-  HOLI10: {
+  MAA15: {
     type: 'percent',
-    value: 10,
-    expiry: '2026-03-31',
-    active: false,
-    description: '10% off on your order'
+    value: 15,
+    expiry: '2026-05-10',
+    start: '2026-05-02',
+    active: true,
+    description: '15% off on your order'
   },
   SUPERWOMAN15: {
     type: 'percent',
     value: 15,
-    expiry: '2026-03-09',
+    start: '2026-04-01',
+    expiry: '2026-12-31',
     active: true,
     description: '15% off on your order on account of International Women\'s Day'
   }

@@ -102,6 +102,27 @@ function loadVariantPrices(productName, productItem, selectElement) {
     priceDisplay.setAttribute('data-price-loaded', 'true');
   }
 
+  const addButton = productItem.querySelector('.add-to-cart-btn');
+  const syncVariantButtonState = (variant) => {
+    if (!addButton) return;
+
+    const isVariantOnSale = SALE_CONFIG.enabled &&
+      SALE_CONFIG.saleProducts[productName]?.[variant];
+    const priceForCart = isVariantOnSale
+      ? SALE_CONFIG.saleProducts[productName][variant]
+      : regularVariants[variant];
+
+    if (priceForCart === 0) {
+      addButton.disabled = true;
+      addButton.classList.add('disabled');
+      addButton.textContent = 'Coming Soon';
+    } else {
+      addButton.disabled = false;
+      addButton.classList.remove('disabled');
+      addButton.textContent = '🛒 Add to Cart';
+    }
+  };
+
   // Update select options with SALE PRICES
   const options = selectElement.querySelectorAll('option');
   options.forEach(option => {
@@ -133,6 +154,7 @@ function loadVariantPrices(productName, productItem, selectElement) {
     const newVariant = this.value;
     updatePriceDisplay(productName, newVariant, priceDisplay);
     updateLowStockBadgeOnVariantChange(productName, this.value, productItem); 
+    syncVariantButtonState(newVariant);
 
     // Also update the selected option's data-price in case cart reads it
     const selectedOption = this.options[this.selectedIndex];
@@ -150,6 +172,7 @@ function loadVariantPrices(productName, productItem, selectElement) {
   });
 
   selectElement.setAttribute('data-price-loaded', 'true');
+  syncVariantButtonState(selectedVariant);
 }
 
 // ============================================================================
@@ -250,6 +273,16 @@ function updatePriceDisplay(productName, variant, priceElement) {
   // Get regular price
   const regularPrice = PRODUCT_PRICES[productName]?.[variant];
 
+  if (regularPrice === 0) {
+    originalPriceSpan.style.display = 'none';
+    discountedPriceSpan.textContent = 'Price coming soon';
+    discountedPriceSpan.classList.remove('on-sale');
+    discountedPriceSpan.classList.add('price-coming-soon');
+    return;
+  }
+
+  discountedPriceSpan.classList.remove('price-coming-soon');
+
   // Check if on sale
   const isProductOnSale = SALE_CONFIG.enabled &&
     SALE_CONFIG.saleProducts[productName]?.[variant];
@@ -315,6 +348,12 @@ function loadSimpleProductPrice(productName, productItem) {
     // Also set the variant value if not already set (legacy support)
     if (!addButton.getAttribute('value')) {
       addButton.setAttribute('value', variantKey);
+    }
+
+    if (priceForCart === 0) {
+      addButton.disabled = true;
+      addButton.classList.add('disabled');
+      addButton.textContent = 'Coming Soon';
     }
   }
 }

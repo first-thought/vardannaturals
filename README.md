@@ -202,10 +202,8 @@ Example:
 3. **Radiant Skin Care** - Face oils, moisturizers, face washes, gels
 4. **Artisan Soaps Collection** - Organic handmade soaps
 5. **Luxurious Bath Salts** - Himalayan and Epsom salt blends
-6. **Essential Oils Collection** - 100% pure essential oils
-7. **Wellness Roll-Ons & Specialty Care** - Portable wellness solutions
-8. **Herbal Gut Care** - Digestive support supplements
-9. **Premium Herbal Tea Collection** - Caffeine-free herbal teas
+6. **Wellness Roll-Ons & Specialty Care** - Portable wellness solutions
+8. **Premium Herbal Tea Collection** - Caffeine-free herbal teas
 
 ## 💰 Pricing
 

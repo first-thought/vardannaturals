@@ -243,6 +243,68 @@
   transform: none;
 }
 
+/* Address */
+.address-row {
+  align-items: flex-start;
+  border-bottom: 1px solid #e8e5e0;
+  padding-bottom: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.address-form-wrapper {
+  flex: 1;
+}
+
+.address-form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem 0.75rem;
+}
+
+.address-form-grid input,
+.address-form-grid select {
+  width: 100%;
+  padding: 0.75rem 0.9rem;
+  border-radius: 12px;
+  border: 1px solid #e0ddd7;
+  font-size: 0.98rem;
+  font-family: "Cormorant Garamond", "Georgia", serif;
+  color: #3a3a3a;
+  outline: none;
+  background: #ffffff;
+}
+
+.address-form-grid input:focus,
+.address-form-grid select:focus {
+  border-color: #4a7c59;
+  box-shadow: 0 0 0 3px rgba(74, 124, 89, 0.15);
+}
+
+/* Make fields that should span both columns */
+.address-form-grid input.full,
+.address-form-grid select.full {
+  grid-column: 1 / -1;
+}
+
+/* Full-width on grid for address line 1/2 and state */
+.address-form-grid input#addressLine1Input,
+.address-form-grid input#addressLine2Input,
+.address-form-grid select#stateInput {
+  grid-column: 1 / -1;
+}
+
+@media (max-width: 768px) {
+  .address-form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .address-form-grid input#addressLine1Input,
+  .address-form-grid input#addressLine2Input,
+  .address-form-grid select#stateInput {
+    grid-column: auto;
+  }
+}
+
 .summary-row.total {
   font-size: 1.5rem;
   font-weight: 600;

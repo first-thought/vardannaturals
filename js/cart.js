@@ -26,6 +26,44 @@ let appliedCoupon = null; // { code, discountAmount, percent } or null
 // Utilities
 // ===============================
 
+function showCouponError(message) {
+  alert(`Coupon: ${message}`);
+}
+
+function buildLocalDate(dateStr, timePart) {
+  // dateStr expected: YYYY-MM-DD
+  return new Date(`${dateStr}T${timePart}`);
+}
+
+function getCouponConfig(code) {
+  if (typeof COUPONS === 'undefined' || !COUPONS) return null;
+  return COUPONS[code] || null;
+}
+
+function validateCouponConfig(coupon) {
+  if (!coupon) return { ok: false, reason: 'This coupon code is invalid.' };
+  if (!coupon.active) return { ok: false, reason: 'This coupon is not active.' };
+
+  const now = new Date();
+
+  if (coupon.start) {
+    const startDate = buildLocalDate(coupon.start, '00:00:00');
+    if (now < startDate) return { ok: false, reason: 'This coupon has not started yet.' };
+  }
+
+  if (coupon.expiry) {
+    const expiryDate = buildLocalDate(coupon.expiry, '23:59:59');
+    if (now > expiryDate) return { ok: false, reason: 'This coupon has expired.' };
+  }
+
+  // Only supporting percent coupons in the UI
+  if (coupon.type !== 'percent' || !coupon.value || isNaN(coupon.value)) {
+    return { ok: false, reason: 'This coupon is not configured correctly.' };
+  }
+
+  return { ok: true, percent: Number(coupon.value) };
+}
+
 /**
  * Parse a price expression like "₹499" or "499" to a number.
  * Returns NaN if it cannot parse.
@@ -411,6 +449,47 @@ function checkoutWhatsApp() {
     return;
   }
 
+  const addressLine1El = document.getElementById('addressLine1Input');
+  const addressLine2El = document.getElementById('addressLine2Input');
+  const cityEl = document.getElementById('cityInput');
+  const pincodeEl = document.getElementById('pincodeInput');
+  const stateEl = document.getElementById('stateInput');
+
+  const addressLine1 = addressLine1El ? (addressLine1El.value || '').trim() : '';
+  const addressLine2 = addressLine2El ? (addressLine2El.value || '').trim() : '';
+  const city = cityEl ? (cityEl.value || '').trim() : '';
+  const pincode = pincodeEl ? (pincodeEl.value || '').trim() : '';
+  const state = stateEl ? (stateEl.value || '').trim() : '';
+
+  if (!addressLine1) {
+    alert('Please enter Address line 1.');
+    addressLine1El?.focus();
+    return;
+  }
+
+  if (!city) {
+    alert('Please enter City.');
+    cityEl?.focus();
+    return;
+  }
+
+  if (!/^\d{6}$/.test(pincode)) {
+    alert('Please enter a valid 6-digit Pincode.');
+    pincodeEl?.focus();
+    return;
+  }
+
+  if (!state) {
+    alert('Please select State.');
+    stateEl?.focus();
+    return;
+  }
+
+  const addressParts = [addressLine1];
+  if (addressLine2) addressParts.push(addressLine2);
+  addressParts.push(`${city}, ${state} - ${pincode}`);
+  const address = addressParts.join('\n');
+
   // Sync prices again before sending
   if (typeof syncCartPrices === "function") {
     syncCartPrices();
@@ -419,6 +498,7 @@ function checkoutWhatsApp() {
   const phoneNumber = '918077775729'; // your number
 
   let message = `🛒 *New Order from Vardan Naturals Website*\n\n`;
+  message += `Delivery Address:\n${address}\n\n`;
 
   cart.forEach((item, index) => {
     const numericPrice = parseFloat(String(item.priceText || item.price).replace(/[^0-9.]/g, '')) || 0;
@@ -643,8 +723,15 @@ function initCartSystem() {
     if (stored) {
       const parsed = JSON.parse(stored);
       // Basic shape check
-      if (parsed && parsed.code && parsed.percent) {
-        appliedCoupon = parsed;
+      if (parsed && parsed.code) {
+        const coupon = getCouponConfig(String(parsed.code).trim().toUpperCase());
+        const validation = validateCouponConfig(coupon);
+        if (validation.ok) {
+          appliedCoupon = { code: parsed.code, percent: validation.percent };
+        } else {
+          localStorage.removeItem('vardanCoupon');
+          appliedCoupon = null;
+        }
       }
     }
   } catch (e) {
@@ -710,55 +797,25 @@ window.updateCartCount = updateCartCount;
 function applyCoupon() {
   const input = document.getElementById('couponCodeInput');
   if (!input) {
-    alert('Coupon input not found.');
     return;
   }
 
   const rawCode = (input.value || '').trim().toUpperCase();
   if (!rawCode) {
-    alert('Please enter a coupon code.');
     return;
   }
 
-  if (typeof COUPONS === 'undefined' || !COUPONS[rawCode]) {
-    alert('Invalid coupon code.');
+  const coupon = getCouponConfig(rawCode);
+  const validation = validateCouponConfig(coupon);
+  if (!validation.ok) {
+    showCouponError(validation.reason);
     appliedCoupon = null;
-    localStorage.removeItem('vardanCoupon');
+    try { localStorage.removeItem('vardanCoupon'); } catch (e) { /* ignore */ }
     renderCartPage();
     return;
   }
 
-  const coupon = COUPONS[rawCode];
-  if (!coupon.active) {
-    alert('This coupon is no longer active.');
-    appliedCoupon = null;
-    localStorage.removeItem('vardanCoupon');
-    renderCartPage();
-    return;
-  }
-
-  if (coupon.expiry) {
-    const today = new Date();
-    // Compare dates at local midnight
-    const expiryDate = new Date(coupon.expiry + 'T23:59:59');
-    if (today > expiryDate) {
-      alert('This coupon has expired.');
-      appliedCoupon = null;
-      localStorage.removeItem('vardanCoupon');
-      renderCartPage();
-      return;
-    }
-  }
-
-  if (coupon.type !== 'percent' || !coupon.value || isNaN(coupon.value)) {
-    alert('This coupon is not configured correctly.');
-    return;
-  }
-
-  appliedCoupon = {
-    code: rawCode,
-    percent: Number(coupon.value)
-  };
+  appliedCoupon = { code: rawCode, percent: validation.percent };
 
   try {
     localStorage.setItem('vardanCoupon', JSON.stringify(appliedCoupon));

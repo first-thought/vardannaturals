@@ -4,9 +4,25 @@
   padding: 0;
 }
 
+:root {
+  --color-brand: #2c5f2d;
+  --color-brand-dark: #1a3a1b;
+  --color-brand-soft: #4a7c59;
+  --color-text: #3a3a3a;
+  --color-text-muted: #6a6a6a;
+  --color-text-light: #8a8a8a;
+  --color-surface: #ffffff;
+  --color-page: #faf9f7;
+  --color-border: #e8e5e0;
+  --shadow-soft: 0 5px 20px rgba(0, 0, 0, 0.08);
+  --shadow-lift: 0 12px 40px rgba(44, 95, 45, 0.15);
+  --radius-card: 14px;
+  --radius-control: 999px;
+}
+
 body {
-  background: #faf9f7;
-  color: #3a3a3a;
+  background: var(--color-page);
+  color: var(--color-text);
   font-family: "Cormorant Garamond", "Georgia", serif;
   line-height: 1.8;
   overflow-x: hidden;
@@ -14,10 +30,10 @@ body {
 
 /* Header */
 header {
-  background: #ffffff;
-  border-bottom: 1px solid #e8e5e0;
+  background: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-  color: #3a3a3a;
+  color: var(--color-text);
   padding: 1rem 0;
   position: fixed;
   top: 0;
@@ -36,7 +52,7 @@ nav {
 
 .logo {
   align-items: center;
-  color: #2c5f2d;
+  color: var(--color-brand);
   display: flex;
   font-size: 1.3rem;
   font-weight: 600;
@@ -52,7 +68,7 @@ nav {
 
 .logo-placeholder {
   align-items: center;
-  background: linear-gradient(135deg, #2c5f2d, #4a7c59);
+  background: linear-gradient(135deg, var(--color-brand), var(--color-brand-soft));
   border-radius: 50%;
   color: white;
   display: flex;
@@ -76,7 +92,7 @@ nav {
 }
 
 .nav-links a {
-  color: #3a3a3a;
+  color: var(--color-text);
   font-size: 0.9rem;
   font-weight: 400;
   letter-spacing: 1px;
@@ -86,12 +102,12 @@ nav {
 }
 
 .nav-links a:hover {
-  color: #2c5f2d;
+  color: var(--color-brand);
 }
 
 /* Hero Section */
 .hero {
-  background: linear-gradient(to bottom, rgba(44, 95, 45, 0.03), rgba(250, 249, 247, 1));
+  background: linear-gradient(to bottom, rgba(44, 95, 45, 0.03), var(--color-page));
   padding: 120px 2rem 80px;
   text-align: center;
 }
@@ -104,8 +120,8 @@ nav {
 .hero-logo {
   align-items: center;
   animation: fadeInUp 1s ease;
-  background: white;
-  border: 3px solid #e8e5e0;
+  background: var(--color-surface);
+  border: 3px solid var(--color-border);
   border-radius: 50%;
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
   display: flex;
@@ -124,7 +140,7 @@ nav {
 
 .hero h1 {
   animation: fadeInUp 1s ease 0.2s backwards;
-  color: #2c5f2d;
+  color: var(--color-brand);
   font-size: 3rem;
   font-weight: 300;
   letter-spacing: 3px;
@@ -133,7 +149,7 @@ nav {
 
 .hero p {
   animation: fadeInUp 1s ease 0.3s backwards;
-  color: #6a6a6a;
+  color: var(--color-text-muted);
   font-size: 1.1rem;
   font-weight: 300;
   line-height: 2;
@@ -154,14 +170,14 @@ nav {
 }
 
 .stat-number {
-  color: #2c5f2d;
+  color: var(--color-brand);
   font-size: 2.5rem;
   font-weight: 300;
   letter-spacing: 2px;
 }
 
 .stat-label {
-  color: #6a6a6a;
+  color: var(--color-text-muted);
   font-size: 0.8rem;
   letter-spacing: 1.5px;
   margin-top: 0.5rem;
