@@ -156,6 +156,53 @@ nav {
   margin-bottom: 3rem;
 }
 
+.hero-actions {
+  animation: fadeInUp 1s ease 0.4s backwards;
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: center;
+  margin-bottom: 3rem;
+}
+
+.hero-actions a {
+  border-radius: var(--radius-control);
+  display: inline-flex;
+  font-size: 1rem;
+  font-weight: 600;
+  justify-content: center;
+  letter-spacing: 0.5px;
+  min-width: 180px;
+  padding: 0.9rem 1.8rem;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.hero-primary-action {
+  background: var(--color-brand);
+  border: 2px solid var(--color-brand);
+  color: white;
+  box-shadow: 0 8px 24px rgba(44, 95, 45, 0.18);
+}
+
+.hero-primary-action:hover {
+  background: var(--color-brand-dark);
+  border-color: var(--color-brand-dark);
+  transform: translateY(-2px);
+}
+
+.hero-secondary-action {
+  background: transparent;
+  border: 2px solid var(--color-brand);
+  color: var(--color-brand);
+}
+
+.hero-secondary-action:hover {
+  background: rgba(44, 95, 45, 0.08);
+  transform: translateY(-2px);
+}
+
 .hero-stats {
   animation: fadeInUp 1s ease 0.5s backwards;
   display: flex;
@@ -182,6 +229,77 @@ nav {
   letter-spacing: 1.5px;
   margin-top: 0.5rem;
   text-transform: uppercase;
+}
+
+.home-banner-section {
+  background: #f3f0ea;
+  padding: 2rem;
+}
+
+.home-banner-frame {
+  background: white;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-soft);
+  margin: 0 auto;
+  max-width: 1400px;
+  overflow: hidden;
+}
+
+.home-banner-frame img {
+  display: block;
+  height: auto;
+  object-fit: contain;
+  width: 100%;
+}
+
+.home-ritual-strip {
+  background: var(--color-page);
+  border-bottom: 1px solid var(--color-border);
+  padding: 2rem;
+}
+
+.home-ritual-grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(3, 1fr);
+  margin: 0 auto;
+  max-width: 1200px;
+}
+
+.home-ritual-item {
+  background: white;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
+  color: var(--color-text);
+  padding: 1.35rem;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.home-ritual-item:hover {
+  border-color: var(--color-brand);
+  box-shadow: var(--shadow-lift);
+  transform: translateY(-4px);
+}
+
+.home-ritual-item span {
+  color: var(--color-brand);
+  display: block;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 1.4px;
+  margin-bottom: 0.35rem;
+  text-transform: uppercase;
+}
+
+.home-ritual-item strong {
+  color: var(--color-text);
+  display: block;
+  font-size: 1.05rem;
+  font-weight: 500;
+  line-height: 1.5;
 }
 
 /* Category Section */

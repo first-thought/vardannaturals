@@ -243,6 +243,14 @@
   background: linear-gradient(135deg, #355f3b 0%, #7f6b3d 100%);
 }
 
+.preview-category-icon.sudhiram {
+  background: linear-gradient(135deg, #31593b 0%, #9f7a8a 100%);
+}
+
+.preview-category-icon.body-hand-wash {
+  background: linear-gradient(135deg, #5f8f68 0%, #8aa6a3 100%);
+}
+
 .preview-category-title {
   color: #2c5f2d;
   margin: 0;
