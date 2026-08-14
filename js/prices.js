@@ -60,17 +60,20 @@ const PRODUCT_PRICES = {
       "100g": 249
     },
     "Triphala Charcoal Soap": {
-      "100g": 225
+      "100g": 199
     },
     "Citrus Loofah Soap": {
-      "100g": 200
+      "100g": 249
     },
     "Goat Milk Soap": {
-      "100g": 275
+      "100g": 249
     },
     "Chandan Glow Soap": {
       "100g": 199
     },
+    "Aqua Bliss Soap": {
+      "100g": 199
+     },
 
     // ========================================
     // Bath Salts

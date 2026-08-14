@@ -4,7 +4,16 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="bac09721-fd25-4500-b53c-a96fa31eaaf9" name="Changes" comment="" />
+    <list default="true" id="bac09721-fd25-4500-b53c-a96fa31eaaf9" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/citrus-bliss-bath-salt.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/images/citrus-bliss-bath-salt.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/green-apple-fresh-bath-salt.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/images/green-apple-fresh-bath-salt.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/lavender-calm-bath-salt.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/images/lavender-calm-bath-salt.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/rose-indulgence-bath-salt.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/images/rose-indulgence-bath-salt.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/vardan-naturals-hero-banner.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/images/vardan-naturals-hero-banner.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/js/prices.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/prices.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/products/soaps.html" beforeDir="false" afterPath="$PROJECT_DIR$/products/soaps.html" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -72,10 +81,17 @@
       <workItem from="1763528848685" duration="25037000" />
       <workItem from="1763728390744" duration="29994000" />
       <workItem from="1772350472705" duration="631000" />
+      <workItem from="1786705513715" duration="470000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="1" />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="538" y="335" key="com.intellij.ide.util.TipDialog" timestamp="1786705512674">
+      <screen x="0" y="25" width="1680" height="958" />
+    </state>
+    <state x="538" y="335" key="com.intellij.ide.util.TipDialog/0.25.1680.958@0.25.1680.958" timestamp="1786705512674" />
   </component>
 </project>
