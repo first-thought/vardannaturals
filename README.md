@@ -6,7 +6,7 @@ A beautiful, responsive website for Vardan Naturals - showcasing a holistic rang
 
 ## 🌿 About
 
-Vardan Naturals is an e-commerce website featuring premium Ayurvedic products including body wellness oils, hair care, skincare, artisan soaps, bath salts, essential oils, and herbal teas. The website emphasizes natural ingredients, traditional Ayurvedic wisdom, and modern wellness practices.
+Vardan Naturals is an e-commerce website featuring premium Ayurvedic products including curated combos, bath and body rituals, body wellness oils, hair care, skincare, artisan soaps, bath salts, herbal teas, wellness products, and wellness tools. The website emphasizes natural ingredients, traditional Ayurvedic wisdom, and modern wellness practices.
 
 **Tagline:** *from nature, with care*
 
@@ -19,7 +19,7 @@ Vardan Naturals is an e-commerce website featuring premium Ayurvedic products in
 - **Forest Essentials-inspired**: Natural, organic feel with premium aesthetics
 
 ### Key Functionality
-- **Product Showcase**: 17+ product categories with detailed descriptions
+- **Product Showcase**: Curated product categories with detailed descriptions
 - **Image Carousel**: Multi-variant products display with interactive image sliders
 - **Dropdown Navigation**: Easy category navigation with smooth dropdown menus
 - **Contact Integration**: Phone, WhatsApp, Instagram, and Google Reviews
@@ -32,6 +32,39 @@ Vardan Naturals is an e-commerce website featuring premium Ayurvedic products in
 - Lightweight and fast loading
 - SEO-friendly structure
 - Cross-browser compatible
+- Shared navigation/category configuration in `js/site-config.js`
+- Optional Google Sheets order logging through Google Apps Script
+- Web app manifest and mobile home-screen icon support
+
+## Site Navigation & Categories
+
+Shared navigation and product category cards are configured in `js/site-config.js`.
+
+When adding, deleting, or renaming a product category:
+- Update `productCategories` in `js/site-config.js`
+- Add or remove the corresponding product page
+- Update `sitemap.xml` if the page should be indexed
+
+The header, footer, Products dropdown, and `products.html` category grid are rendered from this shared configuration by `js/site-layout.js`.
+
+## Google Sheets Order Logging
+
+Checkout still opens WhatsApp, but it can also send the same order details to a Google Sheet.
+
+Setup:
+- Create a Google Sheet with a tab named `Orders`
+- Open Extensions > Apps Script
+- Paste the contents of `google-sheets-order-webhook.js`
+- Set `SHEET_ID` to your Google Sheet ID
+- Deploy as a Web App
+- Set access to `Anyone`
+- Paste the Web App URL into `orderSheetWebAppUrl` in `js/site-config.js`
+
+Each checkout generates an order ID like `VN-20260509-143512-ABCD`. The order ID is included in the WhatsApp message and in the Google Sheet payload.
+
+## Mobile App Icon
+
+The site includes `manifest.webmanifest` and Apple touch icon metadata. When visitors save Vardan Naturals to their phone home screen, the app icon uses square logo-derived assets: `images/app-icon-192.png` and `images/app-icon-512.png`.
 
 ## 📁 Project Structure
 ```
