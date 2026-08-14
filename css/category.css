@@ -88,6 +88,10 @@
   background: linear-gradient(135deg, #2c5f2d 0%, #c49a6c 100%);
 }
 
+.category-image.sudhiram {
+  background: linear-gradient(135deg, #31593b 0%, #9f7a8a 100%);
+}
+
 .category-image.body-hand-wash {
   background: linear-gradient(135deg, #5f8f68 0%, #8aa6a3 100%);
 }
@@ -339,6 +343,10 @@
   background: linear-gradient(90deg, #2c5f2d 0%, #c49a6c 100%);
 }
 
+.category-header.sudhiram::before {
+  background: linear-gradient(90deg, #31593b 0%, #9f7a8a 100%);
+}
+
 .category-header.body-hand-wash::before {
   background: linear-gradient(90deg, #5f8f68 0%, #8aa6a3 100%);
 }
@@ -443,6 +451,10 @@
 
 .category-header .category-icon.combos {
   background: linear-gradient(135deg, #2c5f2d 0%, #c49a6c 100%);
+}
+
+.category-header .category-icon.sudhiram {
+  background: linear-gradient(135deg, #31593b 0%, #9f7a8a 100%);
 }
 
 .category-header .category-icon.body-hand-wash {

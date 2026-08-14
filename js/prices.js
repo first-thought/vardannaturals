@@ -206,33 +206,33 @@ const PRODUCT_PRICES = {
     },
 
     // ========================================
-    // PERFUMES & CHAKRA ROLL-ONS
+    // SUDHIRAM COLLECTION
     // ========================================
+    "Sudhiram Moola": {
+      "default": 499
+    },
+    "Sudhiram Rasika": {
+      "default": 499
+    },
+    "Sudhiram Tejas": {
+      "default": 499
+    },
+    "Sudhiram Prema": {
+      "default": 499
+    },
+    "Sudhiram Vani": {
+      "default": 499
+    },
+    "Sudhiram Dhrishti": {
+      "default": 499
+    },
+    "Sudhiram Shanti": {
+      "default": 499
+    },
     "Solid Perfume Variant 1": {
       "default": 0
     },
     "Solid Perfume Variant 2": {
-      "default": 0
-    },
-    "Root Chakra Roll-On": {
-      "default": 0
-    },
-    "Sacral Chakra Roll-On": {
-      "default": 0
-    },
-    "Solar Plexus Chakra Roll-On": {
-      "default": 0
-    },
-    "Heart Chakra Roll-On": {
-      "default": 0
-    },
-    "Throat Chakra Roll-On": {
-      "default": 0
-    },
-    "Third Eye Chakra Roll-On": {
-      "default": 0
-    },
-    "Crown Chakra Roll-On": {
       "default": 0
     },
     "Complete 7 Chakra Roll-On Set": {

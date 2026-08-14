@@ -27,6 +27,13 @@ window.VARDAN_SITE = {
       className: 'combos'
     },
     {
+      label: 'Sudhiram Collection',
+      href: 'products/sudhiram.html',
+      description: 'Aromatic chakra roll-ons for mindful fragrance rituals',
+      icon: 'fas fa-om',
+      className: 'sudhiram'
+    },
+    {
       label: 'Bath & Body Rituals',
       href: 'products/body-hand-wash.html',
       description: 'Liquid cleansers for bath and hand-care rituals',
