@@ -47,6 +47,16 @@ When adding, deleting, or renaming a product category:
 
 The header, footer, Products dropdown, and `products.html` category grid are rendered from this shared configuration by `js/site-layout.js`.
 
+## Bundle Offers
+
+Category bundle offers are configured in `js/prices.js`.
+
+To change an offer such as `Buy any 5 soaps for ₹699`:
+- Update `PRODUCT_CATEGORIES` with the product names that belong to the category
+- Update `BUNDLE_OFFERS` with `category`, `quantity`, `price`, and `label`
+
+The cart applies full bundles repeatedly. For example, 5 matching products use the bundle price, 6 matching products use one bundle plus the normal price for the 6th item, and 10 matching products use two bundles.
+
 ## Google Sheets Order Logging
 
 Checkout still opens WhatsApp, but it can also send the same order details to a Google Sheet.

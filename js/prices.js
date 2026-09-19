@@ -57,16 +57,16 @@ const PRODUCT_PRICES = {
     // SOAPS
     // ========================================
     "Shea Butter Soap": {
-      "100g": 249
+      "100g": 199
     },
     "Triphala Charcoal Soap": {
       "100g": 199
     },
     "Citrus Loofah Soap": {
-      "100g": 249
+      "100g": 199
     },
     "Goat Milk Soap": {
-      "100g": 249
+      "100g": 199
     },
     "Chandan Glow Soap": {
       "100g": 199
@@ -263,6 +263,39 @@ const GLOBAL_SALE = {
   name: 'Holi Sale',
   description: '10% off sitewide + free gift with every order'
 };
+
+// ============================================================================
+// PRODUCT CATEGORY GROUPS (used by cart bundle offers)
+// ============================================================================
+
+const PRODUCT_CATEGORIES = {
+  soaps: {
+    label: 'Artisan Soaps',
+    products: [
+      'Shea Butter Soap',
+      'Triphala Charcoal Soap',
+      'Citrus Loofah Soap',
+      'Goat Milk Soap',
+      'Chandan Glow Soap',
+      'Aqua Bliss Soap'
+    ]
+  }
+};
+
+// ============================================================================
+// BUNDLE OFFER CONFIGURATION
+// ============================================================================
+
+const BUNDLE_OFFERS = [
+  {
+    id: 'soaps-5-for-799',
+    active: true,
+    category: 'soaps',
+    quantity: 5,
+    price: 799,
+    label: 'Buy any 5 soaps for ₹799'
+  }
+];
 
 // ============================================================================
 // COUPON CONFIGURATION
@@ -523,6 +556,8 @@ window.VardanPrices = {
   searchProducts,
   // Direct access to config (read-only in production)
   PRODUCT_PRICES,
+  PRODUCT_CATEGORIES,
+  BUNDLE_OFFERS,
   SALE_CONFIG,
   GLOBAL_SALE
 };
