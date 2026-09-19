@@ -71,40 +71,15 @@
   <link href="css/category.css" rel="stylesheet"/>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" type="image/png" href="images/app-icon-192.png">
+  <link rel="apple-touch-icon" href="images/app-icon-192.png">
+  <meta name="theme-color" content="#2c5f2d">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Vardan Naturals">
 </head>
 <body>
-<header>
-  <nav>
-    <div class="logo">
-      <div class="logo-placeholder">
-        <img alt="Vardan Naturals Logo – Ayurvedic Wellness Brand" class="logo-image" src="images/vardan-naturals-logo.png"/>
-      </div>
-      <span>Vardan Naturals</span>
-    </div>
-    <ul class="nav-links">
-      <li><a href="#home">Home</a></li>
-      <li class="dropdown">
-        <a href="products.html" class="dropdown-toggle">Products ▾</a>
-        <div class="dropdown-content">
-          <a href="products.html">All Categories</a>
-          <a href="products/combos.html">Curated Combos</a>
-          <a href="products/body-hand-wash.html">Bath &amp; Body Rituals</a>
-          <a href="products/body-wellness-oils.html">Body Wellness Oils</a>
-          <a href="products/hair-care.html">Hair Care Excellence</a>
-          <a href="products/skin-care.html">Radiant Skin Care</a>
-          <a href="products/soaps.html">Artisan Soaps</a>
-          <a href="products/bath-salts.html">Bath Salts</a>
-          <a href="products/wellness.html">Wellness & Specialty Care</a>
-          <a href="products/herbal-tea.html">Herbal Tea Collection</a>
-          <a href="products/tools.html">Wellness Tools</a>
-        </div>
-      </li>
-      <li><a href="#about">About</a></li>
-      <li><a href="#contact">Contact</a></li>
-      <li><a href="cart.html" class="cart-link-nav">🛒 Cart (<span id="navCartCount">0</span>)</a></li>
-    </ul>
-  </nav>
-</header>
+<header></header>
 <section class="hero" id="home">
   <div class="hero-content">
     <div class="hero-logo">
@@ -113,9 +88,13 @@
     <h1>Vardan Naturals</h1>
     <p>A holistic range of Ayurvedic wellness and beauty essentials crafted from pure, natural ingredients for everyday
       harmony.</p>
+    <div class="hero-actions">
+      <a class="hero-primary-action" href="products.html">Shop Products</a>
+      <a class="hero-secondary-action" href="products/sudhiram.html">Explore Sudhiram</a>
+    </div>
     <div class="hero-stats">
       <div class="stat">
-        <div class="stat-number">17+</div>
+        <div class="stat-number">10+</div>
         <div class="stat-label">Product Categories</div>
       </div>
       <div class="stat">
@@ -131,105 +110,26 @@
 </section>
 
 <!-- Feature Image Section -->
-<section style="width: 100%; padding: 0; margin: 0;">
-  <img alt="Vardan Naturals Ayurvedic wellness products banner showcasing oils, soaps and skincare" src="images/vardan-naturals-hero-banner.jpg"
-       style="width: 100%; height: auto; display: block; max-height: 600px; object-fit: cover;"/>
+<section class="home-banner-section">
+  <div class="home-banner-frame">
+    <img alt="Vardan Naturals Ayurvedic wellness products banner showcasing oils, soaps and skincare" src="images/vardan-naturals-hero-banner.jpg"/>
+  </div>
 </section>
 
-<!--
-<section style="width: 100%; padding: 0; margin: 0;">
-  <div style="position: relative;">
-    <img alt="Diwali Sale Banner" src="images/offer-banner-2.jpg"
-         style="width: 100%; height: auto; display: block; max-height: 600px; object-fit: cover;"/>
-
-
-    &lt;!&ndash; Overlay text on image &ndash;&gt;
-    <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; color: white; z-index: 10;">
-      <h2 style="font-size: 3rem; margin-bottom: 1rem; text-shadow: 2px 2px 4px rgba(0,0,0,0.5);">
-        Diwali Mega Sale! 🎊
-      </h2>
-      <p style="font-size: 1.5rem; margin-bottom: 2rem; text-shadow: 2px 2px 4px rgba(0,0,0,0.5);">
-        Up to 30% OFF on Selected Products
-      </p>
-      <a href="products.html" style="display: inline-block; background: #2c5f2d; color: white; padding: 1rem 3rem; border-radius: 50px; font-size: 1.2rem; font-weight: 600; text-decoration: none;">
-        Shop Now →
-      </a>
-
-!-->
-
-  <div class="category" id="pain-relief">
-    <h3>Pain Relief Solutions</h3>
-
-    <div class="product-item">
-      <div class="product-image">
-        <img alt="Mahanarayana Tailam" src="images/mahanarayana-tailam.jpg">
-      </div>
-      <div class="product-details">
-        <div class="product-name">Mahanarayana Tailam</div>
-        <div class="product-tagline">Relief in every drop</div>
-        <p class="product-description">A classical Ayurvedic formulation known for its soothing and rejuvenating
-          properties. It helps relieve joint pain, muscle stiffness, and supports healthy mobility.</p>
-        <div class="product-ingredients">
-          <h4>Key Ingredients</h4>
-          <p>Cold Pressed Sesame Oil, Ashwagandha, Bala Panchang, Dashmool, Shatavari, Rasna, Turmeric, Licorice,
-            Himalayan Herbs</p>
-        </div>
-        <ul class="product-features">
-          <li>Relieves joint pain and muscle stiffness</li>
-          <li>Supports healthy mobility</li>
-          <li>Use twice daily or as directed</li>
-        </ul>
-        <div class="product-price">₹449 (100ml) | ₹799 (200ml)</div>
-      </div>
-    </div>
-
-    <div class="product-item">
-      <div class="product-image">
-        <img alt="Dashmool Tailam" src="images/dashmool-tailam.jpg">
-      </div>
-      <div class="product-details">
-        <div class="product-name">Dashmool Tailam</div>
-        <div class="product-tagline">Relief in every drop</div>
-        <p class="product-description">A classical Ayurvedic oil made from ten powerful roots. Helps relieve pain,
-          stiffness, and inflammation in muscles & joints. Regular massage boosts circulation, relaxes muscles, and
-          supports joint health.</p>
-        <div class="product-ingredients">
-          <h4>Key Ingredients</h4>
-          <p>Cold Pressed Sesame Oil, Dashmool (10 Roots: Bilva, Agnimantha, Shyonaka, Gambhari, Patala, Shalparni,
-            Prishniparni, Brihati, Kantakari, Gokshura), Himalayan Herbs</p>
-        </div>
-        <ul class="product-features">
-          <li>Relieves pain, stiffness, and inflammation</li>
-          <li>Boosts circulation and supports joint health</li>
-          <li>Made from ten powerful roots</li>
-        </ul>
-        <div class="product-price">₹449 (100ml) | ₹799 (200ml)</div>
-      </div>
-    </div>
-
-    <div class="product-item">
-      <div class="product-image">
-        <img alt="Abhyangam Tailam" src="images/abhyangam-tailam.jpeg">
-      </div>
-      <div class="product-details">
-        <div class="product-name">Abhyangam Tailam</div>
-        <div class="product-tagline">Relax. Refresh. Rejuvenate.</div>
-        <p class="product-description">A classical Ayurvedic oil specially formulated for daily full-body massage
-          (Abhyanga). It nourishes the skin, strengthens muscles & joints, relieves fatigue, improves circulation and
-          promotes relaxation & wellness.</p>
-        <div class="product-ingredients">
-          <h4>Key Ingredients</h4>
-          <p>Cold Pressed Sesame Oil, Bala Mool, Bala Panchang, Ashwagandha, Rasna, Eranda, Shatavari, Dashmool,
-            Manjistha, Chandan, Himalayan Herbs</p>
-        </div>
-        <ul class="product-features">
-          <li>Nourishes skin and strengthens muscles</li>
-          <li>Relieves fatigue and improves circulation</li>
-          <li>Promotes relaxation and wellness</li>
-        </ul>
-        <div class="product-price">₹449 (100ml) | ₹799 (200ml)</div>
-      </div>
-    </div>
+<section class="home-ritual-strip">
+  <div class="home-ritual-grid">
+    <a class="home-ritual-item" href="products/combos.html">
+      <span>Curated Combos</span>
+      <strong>Ready-to-gift rituals for everyday wellness</strong>
+    </a>
+    <a class="home-ritual-item" href="products/body-hand-wash.html">
+      <span>Bath & Body Rituals</span>
+      <strong>Body wash and hand wash essentials</strong>
+    </a>
+    <a class="home-ritual-item" href="products/sudhiram.html">
+      <span>Sudhiram Collection</span>
+      <strong>Chakra-inspired aromatic roll-ons</strong>
+    </a>
   </div>
 </section>
 
@@ -344,6 +244,22 @@
     <p style="text-align: center; font-size: 1.1rem; color: #6a6a6a; margin-bottom: 3rem;">Explore our complete range of Ayurvedic products</p>
 
     <div class="preview-categories-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem;">
+
+      <a href="products/sudhiram.html" class="preview-category-card">
+        <div class="preview-category-icon sudhiram">
+          <i class="fas fa-om"></i>
+        </div>
+        <h3 class="preview-category-title">Sudhiram Collection</h3>
+        <p class="preview-category-desc">Chakra-inspired aromatic roll-ons</p>
+      </a>
+
+      <a href="products/body-hand-wash.html" class="preview-category-card">
+        <div class="preview-category-icon body-hand-wash">
+          <i class="fas fa-pump-soap"></i>
+        </div>
+        <h3 class="preview-category-title">Bath & Body Rituals</h3>
+        <p class="preview-category-desc">Body wash and hand wash essentials</p>
+      </a>
 
       <!-- Pain Relief -->
       <a href="products/body-wellness-oils.html" class="preview-category-card">
@@ -490,10 +406,7 @@
     </div>
   </div>
 </section>
-<footer>
-  <p>© 2025 First Thought Technology. All rights reserved.</p>
-  <p style="margin-top: 0.8rem; font-style: italic; opacity: 0.9;">Made with ❤️</p>
-</footer>
+<footer></footer>
 <!--&lt;!&ndash; Add before closing </body> tag &ndash;&gt;-->
 <!--<div id="dealModal" class="deal-modal">-->
 <!--  <div class="deal-modal-content">-->
@@ -506,6 +419,8 @@
 <!--</div>-->
 
 <!-- Scripts -->
+<script src="js/site-config.js"></script>
+<script src="js/site-layout.js"></script>
 <script src="js/prices.js"></script>
 <script src="js/price-loader.js"></script>
 <script src="js/cart.js"></script>

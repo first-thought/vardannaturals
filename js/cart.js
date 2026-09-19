@@ -87,6 +87,66 @@ function formatPriceText(n) {
   return `₹${Math.round(n)}`;
 }
 
+function getSiteConfig() {
+  return window.VARDAN_SITE || {};
+}
+
+function generateOrderId() {
+  const now = new Date();
+  const datePart = [
+    now.getFullYear(),
+    String(now.getMonth() + 1).padStart(2, '0'),
+    String(now.getDate()).padStart(2, '0')
+  ].join('');
+  const timePart = [
+    String(now.getHours()).padStart(2, '0'),
+    String(now.getMinutes()).padStart(2, '0'),
+    String(now.getSeconds()).padStart(2, '0')
+  ].join('');
+  const randomPart = Math.random().toString(36).slice(2, 6).toUpperCase();
+  return `VN-${datePart}-${timePart}-${randomPart}`;
+}
+
+function buildOrderItems() {
+  return cart.map(item => {
+    const numericPrice = parsePriceToNumber(item.priceText || item.price) || 0;
+    const quantity = Number(item.quantity || 0);
+    return {
+      name: item.name || '',
+      variant: item.variant || 'default',
+      price: numericPrice,
+      priceText: item.priceText || formatPriceText(numericPrice),
+      quantity,
+      subtotal: Math.round(numericPrice * quantity)
+    };
+  });
+}
+
+function submitOrderToSheet(orderPayload) {
+  const sheetUrl = getSiteConfig().orderSheetWebAppUrl;
+  if (!sheetUrl) {
+    console.info('Order sheet sync skipped: orderSheetWebAppUrl is not configured.');
+    return Promise.resolve({ skipped: true });
+  }
+
+  return fetch(sheetUrl, {
+    method: 'POST',
+    mode: 'no-cors',
+    keepalive: true,
+    headers: {
+      'Content-Type': 'text/plain;charset=utf-8'
+    },
+    body: JSON.stringify(orderPayload)
+  }).catch(error => {
+    console.warn('Order sheet sync failed:', error);
+    return { error };
+  });
+}
+
+function normalizePhoneNumber(phone) {
+  return String(phone || '').replace(/[^\d]/g, '').replace(/^91(?=\d{10}$)/, '');
+}
+
 /**
  * Safe wrapper around centralized getPrice(name, variant)
  * Expected getPrice to return numeric price or null/undefined if not found.
@@ -443,7 +503,7 @@ function escapeHtml(str) {
 // ===============================
 // Checkout (WhatsApp) - uses stored canonical prices (synced)
 // ===============================
-function checkoutWhatsApp() {
+async function checkoutWhatsApp() {
   if (cart.length === 0) {
     alert('Your cart is empty!');
     return;
@@ -454,12 +514,20 @@ function checkoutWhatsApp() {
   const cityEl = document.getElementById('cityInput');
   const pincodeEl = document.getElementById('pincodeInput');
   const stateEl = document.getElementById('stateInput');
+  const customerPhoneEl = document.getElementById('customerPhoneInput');
 
   const addressLine1 = addressLine1El ? (addressLine1El.value || '').trim() : '';
   const addressLine2 = addressLine2El ? (addressLine2El.value || '').trim() : '';
   const city = cityEl ? (cityEl.value || '').trim() : '';
   const pincode = pincodeEl ? (pincodeEl.value || '').trim() : '';
   const state = stateEl ? (stateEl.value || '').trim() : '';
+  const customerPhone = normalizePhoneNumber(customerPhoneEl ? customerPhoneEl.value : '');
+
+  if (!/^[6-9]\d{9}$/.test(customerPhone)) {
+    alert('Please enter a valid 10-digit mobile number.');
+    customerPhoneEl?.focus();
+    return;
+  }
 
   if (!addressLine1) {
     alert('Please enter Address line 1.');
@@ -495,9 +563,10 @@ function checkoutWhatsApp() {
     syncCartPrices();
   }
 
-  const phoneNumber = '918077775729'; // your number
+  const phoneNumber = getSiteConfig().whatsappNumber || WHATSAPP_NUMBER;
 
   let message = `🛒 *New Order from Vardan Naturals Website*\n\n`;
+  message += `Customer Phone: ${customerPhone}\n\n`;
   message += `Delivery Address:\n${address}\n\n`;
 
   cart.forEach((item, index) => {
@@ -522,8 +591,33 @@ function checkoutWhatsApp() {
 
   const roundedSubtotal = Math.round(total);
   const { discount, total: finalTotal } = applyCouponToSubtotal(roundedSubtotal);
+  const orderId = generateOrderId();
+  const orderItems = buildOrderItems();
+  const orderPayload = {
+    orderId,
+    status: 'WhatsApp checkout started',
+    createdAt: new Date().toISOString(),
+    source: 'website',
+    customerPhone,
+    items: orderItems,
+    subtotal: roundedSubtotal,
+    discount,
+    total: Math.round(finalTotal),
+    couponCode: appliedCoupon?.code || '',
+    address: {
+      line1: addressLine1,
+      line2: addressLine2,
+      city,
+      state,
+      pincode,
+      formatted: address
+    }
+  };
+
+  submitOrderToSheet(orderPayload);
 
   message += `───────────────\n`;
+  message += `Order ID: *${orderId}*\n`;
   message += `Subtotal: ₹${roundedSubtotal.toFixed(0)}\n`;
   if (appliedCoupon && discount > 0) {
     message += `Coupon (${appliedCoupon.code}): -₹${discount.toFixed(0)}\n`;

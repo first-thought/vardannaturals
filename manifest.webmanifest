@@ -1,0 +1,24 @@
+{
+  "name": "Vardan Naturals",
+  "short_name": "Vardan",
+  "description": "Ayurvedic wellness, beauty and herbal care from Vardan Naturals.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#faf9f7",
+  "theme_color": "#2c5f2d",
+  "icons": [
+    {
+      "src": "images/app-icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "images/app-icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

@@ -30,197 +30,29 @@
   <link href="css/category.css" rel="stylesheet"/>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" type="image/png" href="images/app-icon-192.png">
+  <link rel="apple-touch-icon" href="images/app-icon-192.png">
+  <meta name="theme-color" content="#2c5f2d">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Vardan Naturals">
 </head>
 <body>
-<header>
-  <nav>
-    <div class="logo">
-      <div class="logo-placeholder">
-        <img alt="Vardan Naturals Logo" class="logo-image" src="images/vardan-naturals-logo.png">
-      </div>
-      <span>Vardan Naturals</span>
-    </div>
-    <ul class="nav-links">
-      <li><a href="index.html#home">Home</a></li>
-      <li class="dropdown">
-        <a href="products.html" class="dropdown-toggle">Products ▾</a>
-        <div class="dropdown-content">
-          <a href="products.html">All Categories</a>
-          <a href="products/combos.html">Curated Combos</a>
-          <a href="products/body-hand-wash.html">Bath &amp; Body Rituals</a>
-          <a href="products/body-wellness-oils.html">Body Wellness Oils</a>
-          <a href="products/hair-care.html">Hair Care Excellence</a>
-          <a href="products/skin-care.html">Radiant Skin Care</a>
-          <a href="products/soaps.html">Artisan Soaps</a>
-          <a href="products/bath-salts.html">Bath Salts</a>
-          <a href="products/wellness.html">Wellness & Specialty Care</a>
-          <a href="products/herbal-tea.html">Herbal Tea Collection</a>
-          <a href="products/tools.html">Wellness Tools</a>
-        </div>
-      </li>
-      <li><a href="index.html#about">About</a></li>
-      <li><a href="index.html#contact">Contact</a></li>
-      <li><a class="cart-link-nav" href="cart.html">🛒 Cart (<span id="navCartCount">0</span>)</a></li>
-    </ul>
-  </nav>
-</header>
+<header></header>
 
 <section class="products-overview">
   <div>
     <h2 class="section-title">Our Collection</h2>
     <p class="section-subtitle">Discover the ancient wisdom of Ayurveda in every product</p>
 
-    <div class="category-grid">
-
-      <!-- Pain Relief -->
-      <a class="category-card" href="products/combos.html">
-        <div class="category-card-inner">
-          <div class="category-image combos">
-            <i class="fas fa-gift"></i>
-          </div>
-          <div class="category-content">
-            <h3 class="category-title">Curated Combos</h3>
-            <p class="category-description">Curated bundles, gift sets and special-value self-care pairings</p>
-            <span class="category-link-text">Explore Curated Combos →</span>
-          </div>
-        </div>
-      </a>
-
-      <!-- Bath & Body Rituals -->
-      <a class="category-card" href="products/body-hand-wash.html">
-        <div class="category-card-inner">
-          <div class="category-image body-hand-wash">
-            <i class="fas fa-pump-soap"></i>
-          </div>
-          <div class="category-content">
-            <h3 class="category-title">Bath & Body Rituals</h3>
-            <p class="category-description">Liquid cleansers for bath and hand-care rituals</p>
-            <span class="category-link-text">Explore Products →</span>
-          </div>
-        </div>
-      </a>
-
-      <!-- Body Wellness Oils -->
-      <a class="category-card" href="products/body-wellness-oils.html">
-        <div class="category-card-inner">
-          <div class="category-image pain-relief">
-            <i class="fas fa-spa"></i>
-          </div>
-          <div class="category-content">
-            <h3 class="category-title">Body Wellness Oils</h3>
-            <p class="category-description">Ayurvedic massage oils for joint pain and muscle stiffness</p>
-            <span class="category-link-text">Explore Products →</span>
-          </div>
-        </div>
-      </a>
-
-      <!-- Hair Care -->
-      <a class="category-card" href="products/hair-care.html">
-        <div class="category-card-inner">
-          <div class="category-image hair-care">
-            <i class="fas fa-wind"></i>
-          </div>
-          <div class="category-content">
-            <h3 class="category-title">Hair Care Excellence</h3>
-            <p class="category-description">Natural hair oils for healthy, shiny, and strong hair</p>
-            <span class="category-link-text">Explore Products →</span>
-          </div>
-        </div>
-      </a>
-
-      <!-- Skin Care -->
-      <a class="category-card" href="products/skin-care.html">
-        <div class="category-card-inner">
-          <div class="category-image skin-care">
-            <i class="fas fa-star"></i>
-          </div>
-          <div class="category-content">
-            <h3 class="category-title">Radiant Skin Care</h3>
-            <p class="category-description">Radiant skin essentials with natural ingredients</p>
-            <span class="category-link-text">Explore Products →</span>
-          </div>
-        </div>
-      </a>
-
-      <!-- Artisan Soaps -->
-      <a class="category-card" href="products/soaps.html">
-        <div class="category-card-inner">
-          <div class="category-image soaps">
-            <i class="fas fa-hand-sparkles"></i>
-          </div>
-          <div class="category-content">
-            <h3 class="category-title">Artisan Soaps</h3>
-            <p class="category-description">Handcrafted soaps with natural ingredients</p>
-            <span class="category-link-text">Explore Products →</span>
-          </div>
-        </div>
-      </a>
-
-      <!-- Herbal Tea -->
-      <a class="category-card" href="products/herbal-tea.html">
-        <div class="category-card-inner">
-          <div class="category-image herbal-tea">
-            <i class="fas fa-mug-hot"></i>
-          </div>
-          <div class="category-content">
-            <h3 class="category-title">Herbal Tea Collection</h3>
-            <p class="category-description">Wellness teas for digestion, immunity, and relaxation</p>
-            <span class="category-link-text">Explore Products →</span>
-          </div>
-        </div>
-      </a>
-
-      <!-- Bath Salts -->
-      <a class="category-card" href="products/bath-salts.html">
-        <div class="category-card-inner">
-          <div class="category-image bath-salts">
-            <i class="fas fa-bath"></i>
-          </div>
-          <div class="category-content">
-            <h3 class="category-title">Bath Salts</h3>
-            <p class="category-description">Therapeutic bath salts for relaxation and skin nourishment</p>
-            <span class="category-link-text">Explore Products →</span>
-          </div>
-        </div>
-      </a>
-
-      <!-- Wellness -->
-      <a class="category-card" href="products/wellness.html">
-        <div class="category-card-inner">
-          <div class="category-image wellness">
-            <i class="fas fa-heart"></i>
-          </div>
-          <div class="category-content">
-            <h3 class="category-title">Wellness & Specialty Care</h3>
-            <p class="category-description">Specialized products for holistic health and wellness</p>
-            <span class="category-link-text">Explore Products →</span>
-          </div>
-        </div>
-      </a>
-
-      <!-- Wellness Tools -->
-      <a class="category-card" href="products/tools.html">
-        <div class="category-card-inner">
-          <div class="category-image tools">
-            <i class="fas fa-toolbox"></i>
-          </div>
-          <div class="category-content">
-            <h3 class="category-title">Wellness Tools</h3>
-            <p class="category-description">Traditional wellness tools for Ayurvedic practices</p>
-            <span class="category-link-text">Explore Products →</span>
-          </div>
-        </div>
-      </a>
-
-    </div>
+    <div class="category-grid" data-category-grid></div>
   </div>
 </section>
 
-<footer>
-  <p>© 2025 First Thought Technology. All rights reserved.</p>
-  <p style="margin-top: 0.8rem; font-style: italic; opacity: 0.9;">Made with ❤️</p>
-</footer>
+<footer></footer>
 
+<script src="js/site-config.js"></script>
+<script src="js/site-layout.js"></script>
 <script src="js/prices.js"></script>
 <script src="js/price-loader.js"></script>
 <script src="js/cart.js"></script>

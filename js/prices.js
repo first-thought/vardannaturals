@@ -60,17 +60,20 @@ const PRODUCT_PRICES = {
       "100g": 249
     },
     "Triphala Charcoal Soap": {
-      "100g": 225
+      "100g": 199
     },
     "Citrus Loofah Soap": {
-      "100g": 200
+      "100g": 249
     },
     "Goat Milk Soap": {
-      "100g": 275
+      "100g": 249
     },
     "Chandan Glow Soap": {
       "100g": 199
     },
+    "Aqua Bliss Soap": {
+      "100g": 199
+     },
 
     // ========================================
     // Bath Salts
@@ -203,33 +206,33 @@ const PRODUCT_PRICES = {
     },
 
     // ========================================
-    // PERFUMES & CHAKRA ROLL-ONS
+    // SUDHIRAM COLLECTION
     // ========================================
+    "Sudhiram Moola": {
+      "default": 499
+    },
+    "Sudhiram Rasika": {
+      "default": 499
+    },
+    "Sudhiram Tejas": {
+      "default": 499
+    },
+    "Sudhiram Prema": {
+      "default": 499
+    },
+    "Sudhiram Vani": {
+      "default": 499
+    },
+    "Sudhiram Dhrishti": {
+      "default": 499
+    },
+    "Sudhiram Shanti": {
+      "default": 499
+    },
     "Solid Perfume Variant 1": {
       "default": 0
     },
     "Solid Perfume Variant 2": {
-      "default": 0
-    },
-    "Root Chakra Roll-On": {
-      "default": 0
-    },
-    "Sacral Chakra Roll-On": {
-      "default": 0
-    },
-    "Solar Plexus Chakra Roll-On": {
-      "default": 0
-    },
-    "Heart Chakra Roll-On": {
-      "default": 0
-    },
-    "Throat Chakra Roll-On": {
-      "default": 0
-    },
-    "Third Eye Chakra Roll-On": {
-      "default": 0
-    },
-    "Crown Chakra Roll-On": {
       "default": 0
     },
     "Complete 7 Chakra Roll-On Set": {
@@ -269,11 +272,11 @@ const GLOBAL_SALE = {
 // start/expiry should be ISO date strings (YYYY-MM-DD) in local time
 const COUPONS = {
   // Example: 10% off, valid till 31 March 2026
-  MAA15: {
+  NITIKA15: {
     type: 'percent',
     value: 15,
-    expiry: '2026-05-10',
-    start: '2026-05-02',
+    expiry: '2026-07-07',
+    start: '2026-06-06',
     active: true,
     description: '15% off on your order'
   },
@@ -284,6 +287,14 @@ const COUPONS = {
     expiry: '2026-12-31',
     active: true,
     description: '15% off on your order on account of International Women\'s Day'
+  },
+  RAKHI10: {
+    type: 'percent',
+    value: 10,
+    start: '2026-08-22',
+    expiry: '2026-08-30',
+    active: true,
+    description: '10% off on your order for Rakhi'
   }
 };
 

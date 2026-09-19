@@ -82,6 +82,15 @@
     line-height: 1.8;
   }
 
+  .hero-actions {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .hero-actions a {
+    width: 100%;
+  }
+
   .hero-stats {
     flex-direction: column;
     gap: 2rem;
@@ -93,6 +102,22 @@
 
   .stat-label {
     font-size: 0.75rem;
+  }
+
+  .home-banner-section {
+    padding: 1rem;
+  }
+
+  .home-banner-frame {
+    border-radius: 10px;
+  }
+
+  .home-ritual-strip {
+    padding: 1.25rem;
+  }
+
+  .home-ritual-grid {
+    grid-template-columns: 1fr;
   }
 
   .categories {
