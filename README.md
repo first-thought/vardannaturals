@@ -240,13 +240,17 @@ Example:
 
 ## 📱 Product Categories
 
-1. **Body Wellness Oils** - Ayurvedic massage oils and potli
-2. **Hair Care Excellence** - Hair oils for nourishment and dandruff control
-3. **Radiant Skin Care** - Face oils, moisturizers, face washes, gels
-4. **Artisan Soaps Collection** - Organic handmade soaps
-5. **Luxurious Bath Salts** - Himalayan and Epsom salt blends
-6. **Wellness Roll-Ons & Specialty Care** - Portable wellness solutions
-8. **Premium Herbal Tea Collection** - Caffeine-free herbal teas
+1. **Curated Combos** - Self-care bundles and gifting rituals
+2. **Sudhiram Collection** - Chakra-inspired aromatic roll-ons
+3. **Bath & Body Rituals** - Body wash, hand wash and body-care placeholders
+4. **Body Wellness Oils** - Ayurvedic massage oils
+5. **Hair Care Excellence** - Hair oils for nourishment and dandruff control
+6. **Face & Skin Care** - Face oils, serums, scrubs, cleansers, gels and moisturisers
+7. **Artisan Soaps Collection** - Organic handmade soaps
+8. **Luxurious Bath Salts** - Himalayan and Epsom salt blends
+9. **Everyday Wellness Care** - Roll-ons, balms, lip care, foot care and sachets
+10. **Premium Herbal Tea Collection** - Caffeine-free herbal teas
+11. **Wellness Tools** - Kansa tools and massage potli
 
 ## 💰 Pricing
 

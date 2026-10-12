@@ -36,7 +36,7 @@ window.VARDAN_SITE = {
     {
       label: 'Bath & Body Rituals',
       href: 'products/body-hand-wash.html',
-      description: 'Liquid cleansers for bath and hand-care rituals',
+      description: 'Body wash, hand wash and nourishing body-care essentials',
       icon: 'fas fa-pump-soap',
       className: 'body-hand-wash'
     },
@@ -55,9 +55,9 @@ window.VARDAN_SITE = {
       className: 'hair-care'
     },
     {
-      label: 'Radiant Skin Care',
+      label: 'Face & Skin Care',
       href: 'products/skin-care.html',
-      description: 'Radiant skin essentials with natural ingredients',
+      description: 'Face oils, serums, scrubs, cleansers and moisturising care',
       icon: 'fas fa-star',
       className: 'skin-care'
     },
@@ -76,9 +76,9 @@ window.VARDAN_SITE = {
       className: 'bath-salts'
     },
     {
-      label: 'Wellness & Specialty Care',
+      label: 'Everyday Wellness Care',
       href: 'products/wellness.html',
-      description: 'Specialized products for holistic health and wellness',
+      description: 'Roll-ons, balms, lip care, foot care and aromatic sachets',
       icon: 'fas fa-heart',
       className: 'wellness'
     },

@@ -26,6 +26,10 @@ const PRODUCT_PRICES = {
   "250ml": 299
 },
 
+"Body Butter": {
+  "default": 0
+},
+
   // ========================================
 // CURATED RITUALS
 // ========================================
@@ -155,6 +159,12 @@ const PRODUCT_PRICES = {
     "Aloe Vera Gel": {
       "50g": 249
     },
+    "Face Serum": {
+      "default": 0
+    },
+    "Face Scrub": {
+      "default": 0
+    },
 
     // ========================================
     // HERBAL TEA
@@ -197,6 +207,12 @@ const PRODUCT_PRICES = {
     },
     "Green Apple Bliss Balm": {
       "15g": 249
+    },
+    "Chocolate Lip Balm": {
+      "default": 0
+    },
+    "Foot Butter": {
+      "default": 0
     },
     "Citrus Bliss Wardrobe Sachet": {
       "100g": 349
