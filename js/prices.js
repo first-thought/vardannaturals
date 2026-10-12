@@ -293,7 +293,8 @@ const BUNDLE_OFFERS = [
     category: 'soaps',
     quantity: 5,
     price: 799,
-    label: 'Buy any 5 soaps for ₹799'
+    label: 'Buy any 5 soaps for ₹799',
+    href: 'products/soaps.html'
   }
 ];
 
@@ -321,13 +322,13 @@ const COUPONS = {
     active: true,
     description: '15% off on your order on account of International Women\'s Day'
   },
-  RAKHI10: {
+  SHUBH10: {
     type: 'percent',
     value: 10,
-    start: '2026-08-22',
-    expiry: '2026-08-30',
+    start: '2026-10-11',
+    expiry: '2026-10-21',
     active: true,
-    description: '10% off on your order for Rakhi'
+    description: '10% off on your order for Navratri'
   }
 };
 
