@@ -57,16 +57,16 @@ const PRODUCT_PRICES = {
     // SOAPS
     // ========================================
     "Shea Butter Soap": {
-      "100g": 249
+      "100g": 199
     },
     "Triphala Charcoal Soap": {
       "100g": 199
     },
     "Citrus Loofah Soap": {
-      "100g": 249
+      "100g": 199
     },
     "Goat Milk Soap": {
-      "100g": 249
+      "100g": 199
     },
     "Chandan Glow Soap": {
       "100g": 199
@@ -265,6 +265,40 @@ const GLOBAL_SALE = {
 };
 
 // ============================================================================
+// PRODUCT CATEGORY GROUPS (used by cart bundle offers)
+// ============================================================================
+
+const PRODUCT_CATEGORIES = {
+  soaps: {
+    label: 'Artisan Soaps',
+    products: [
+      'Shea Butter Soap',
+      'Triphala Charcoal Soap',
+      'Citrus Loofah Soap',
+      'Goat Milk Soap',
+      'Chandan Glow Soap',
+      'Aqua Bliss Soap'
+    ]
+  }
+};
+
+// ============================================================================
+// BUNDLE OFFER CONFIGURATION
+// ============================================================================
+
+const BUNDLE_OFFERS = [
+  {
+    id: 'soaps-5-for-799',
+    active: true,
+    category: 'soaps',
+    quantity: 5,
+    price: 799,
+    label: 'Buy any 5 soaps for ₹799',
+    href: 'products/soaps.html'
+  }
+];
+
+// ============================================================================
 // COUPON CONFIGURATION
 // ============================================================================
 
@@ -288,13 +322,13 @@ const COUPONS = {
     active: true,
     description: '15% off on your order on account of International Women\'s Day'
   },
-  RAKHI10: {
+  SHUBH10: {
     type: 'percent',
     value: 10,
-    start: '2026-08-22',
-    expiry: '2026-08-30',
+    start: '2026-10-11',
+    expiry: '2026-10-21',
     active: true,
-    description: '10% off on your order for Rakhi'
+    description: '10% off on your order for Navratri'
   }
 };
 
@@ -523,6 +557,8 @@ window.VardanPrices = {
   searchProducts,
   // Direct access to config (read-only in production)
   PRODUCT_PRICES,
+  PRODUCT_CATEGORIES,
+  BUNDLE_OFFERS,
   SALE_CONFIG,
   GLOBAL_SALE
 };

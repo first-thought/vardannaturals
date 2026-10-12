@@ -87,6 +87,27 @@ function formatPriceText(n) {
   return `₹${Math.round(n)}`;
 }
 
+function formatAdjustmentText(amount) {
+  const rounded = Math.round(Number(amount || 0));
+  if (rounded === 0) return '₹0';
+  return `${rounded > 0 ? '-' : '+'}₹${Math.abs(rounded)}`;
+}
+
+function createUnitAddedAt() {
+  return new Date().toISOString();
+}
+
+function normalizeUnitAddedAt(item, quantity) {
+  const existing = Array.isArray(item.unitAddedAt) ? item.unitAddedAt.slice(0, quantity) : [];
+  const fallback = item.addedAt || createUnitAddedAt();
+
+  while (existing.length < quantity) {
+    existing.push(fallback);
+  }
+
+  return existing;
+}
+
 function getSiteConfig() {
   return window.VARDAN_SITE || {};
 }
@@ -109,7 +130,7 @@ function generateOrderId() {
 
 function buildOrderItems() {
   return cart.map(item => {
-    const numericPrice = parsePriceToNumber(item.priceText || item.price) || 0;
+    const numericPrice = getCartItemUnitPrice(item);
     const quantity = Number(item.quantity || 0);
     return {
       name: item.name || '',
@@ -145,6 +166,110 @@ function submitOrderToSheet(orderPayload) {
 
 function normalizePhoneNumber(phone) {
   return String(phone || '').replace(/[^\d]/g, '').replace(/^91(?=\d{10}$)/, '');
+}
+
+function getBundleOffers() {
+  if (typeof BUNDLE_OFFERS === 'undefined' || !Array.isArray(BUNDLE_OFFERS)) return [];
+  return BUNDLE_OFFERS.filter(offer => {
+    const quantity = Number(offer.quantity);
+    const price = Number(offer.price);
+    return offer && offer.active && offer.category && quantity > 0 && price >= 0;
+  });
+}
+
+function getProductCategory(categoryKey) {
+  if (typeof PRODUCT_CATEGORIES === 'undefined' || !PRODUCT_CATEGORIES) return null;
+  return PRODUCT_CATEGORIES[categoryKey] || null;
+}
+
+function getCartItemUnitPrice(item) {
+  const syncedPrice = safeGetPrice(item.name, item.variant);
+  if (syncedPrice !== null) return syncedPrice;
+
+  const parsedPrice = parsePriceToNumber(item.priceText || item.price);
+  return isNaN(parsedPrice) ? 0 : parsedPrice;
+}
+
+function buildCartUnits(cartItems = cart) {
+  const units = [];
+
+  cartItems.forEach((item, itemIndex) => {
+    const quantity = Math.max(0, Number(item.quantity || 0));
+    const unitPrice = getCartItemUnitPrice(item);
+
+    for (let unitIndex = 0; unitIndex < quantity; unitIndex++) {
+      units.push({
+        itemIndex,
+        unitIndex,
+        name: item.name || '',
+        variant: item.variant || 'default',
+        unitPrice,
+        addedAt: item.unitAddedAt?.[unitIndex] || item.addedAt || '',
+        consumed: false
+      });
+    }
+  });
+
+  return units.sort((a, b) => {
+    const addedAtComparison = String(a.addedAt).localeCompare(String(b.addedAt));
+    if (addedAtComparison !== 0) return addedAtComparison;
+    if (a.itemIndex !== b.itemIndex) return a.itemIndex - b.itemIndex;
+    return a.unitIndex - b.unitIndex;
+  });
+}
+
+function calculateBundlePricingSummary(cartItems = cart) {
+  const units = buildCartUnits(cartItems);
+  const regularSubtotal = Math.round(units.reduce((sum, unit) => sum + unit.unitPrice, 0));
+  const appliedBundles = [];
+
+  getBundleOffers().forEach(offer => {
+    const category = getProductCategory(offer.category);
+    if (!category || !Array.isArray(category.products)) return;
+
+    const categoryProducts = new Set(category.products);
+    const eligibleUnits = units.filter(unit => !unit.consumed && categoryProducts.has(unit.name));
+    const bundleQuantity = Number(offer.quantity);
+    const bundlePrice = Number(offer.price);
+    const bundleCount = Math.floor(eligibleUnits.length / bundleQuantity);
+
+    for (let bundleIndex = 0; bundleIndex < bundleCount; bundleIndex++) {
+      const bundleUnits = eligibleUnits.slice(
+        bundleIndex * bundleQuantity,
+        (bundleIndex + 1) * bundleQuantity
+      );
+      const regularTotal = Math.round(bundleUnits.reduce((sum, unit) => sum + unit.unitPrice, 0));
+
+      bundleUnits.forEach(unit => {
+        unit.consumed = true;
+      });
+
+      appliedBundles.push({
+        id: offer.id || `${offer.category}-${bundleQuantity}-for-${bundlePrice}`,
+        label: offer.label || `${category.label || offer.category}: ${bundleQuantity} for ${formatPriceText(bundlePrice)}`,
+        category: offer.category,
+        quantity: bundleQuantity,
+        bundlePrice,
+        regularTotal,
+        savings: regularTotal - bundlePrice,
+        items: bundleUnits.map(unit => ({
+          name: unit.name,
+          variant: unit.variant,
+          unitPrice: unit.unitPrice
+        }))
+      });
+    }
+  });
+
+  const bundleSavings = Math.round(appliedBundles.reduce((sum, bundle) => sum + bundle.savings, 0));
+  const subtotalAfterBundles = Math.max(0, regularSubtotal - bundleSavings);
+
+  return {
+    regularSubtotal,
+    bundleSavings,
+    subtotalAfterBundles,
+    appliedBundles
+  };
 }
 
 /**
@@ -190,7 +315,10 @@ function loadCart() {
     price: (item.price && !isNaN(Number(item.price))) ? Number(item.price) : parsePriceToNumber(item.priceText || item.priceText),
     image: item.image || 'images/vardan-naturals-logo.png',
     quantity: Number(item.quantity || 1),
-    addedAt: item.addedAt || new Date().toISOString()
+    addedAt: item.addedAt || createUnitAddedAt()
+  })).map(item => ({
+    ...item,
+    unitAddedAt: normalizeUnitAddedAt(item, Number(item.quantity || 1))
   }));
 
   // Immediately sync prices if centralized pricing exists
@@ -330,7 +458,10 @@ function addToCart(arg1, arg2, arg3, arg4) {
     existing.quantity = Number(existing.quantity || 0) + 1;
     existing.priceText = priceText;
     existing.price = numericPrice;
+    existing.unitAddedAt = normalizeUnitAddedAt(existing, existing.quantity - 1);
+    existing.unitAddedAt.push(createUnitAddedAt());
   } else {
+    const addedAt = createUnitAddedAt();
     cart.push({
       name: productName,
       variant: variant,
@@ -338,7 +469,8 @@ function addToCart(arg1, arg2, arg3, arg4) {
       price: numericPrice,
       image: image || 'images/vardan-naturals-logo.png',
       quantity: 1,
-      addedAt: new Date().toISOString()
+      addedAt,
+      unitAddedAt: [addedAt]
     });
   }
 
@@ -363,11 +495,20 @@ function removeFromCart(index) {
  */
 function updateQuantity(index, change) {
   if (!Number.isInteger(index) || index < 0 || index >= cart.length) return;
-  cart[index].quantity = Number(cart[index].quantity || 0) + Number(change || 0);
+  const previousQuantity = Number(cart[index].quantity || 0);
+  const nextQuantity = previousQuantity + Number(change || 0);
+  cart[index].quantity = nextQuantity;
 
-  if (cart[index].quantity <= 0) {
+  if (nextQuantity <= 0) {
     // remove
     cart.splice(index, 1);
+  } else if (nextQuantity > previousQuantity) {
+    cart[index].unitAddedAt = normalizeUnitAddedAt(cart[index], previousQuantity);
+    while (cart[index].unitAddedAt.length < nextQuantity) {
+      cart[index].unitAddedAt.push(createUnitAddedAt());
+    }
+  } else if (nextQuantity < previousQuantity) {
+    cart[index].unitAddedAt = normalizeUnitAddedAt(cart[index], previousQuantity).slice(0, nextQuantity);
   }
   saveCart();
   renderCartPage();
@@ -388,11 +529,7 @@ function clearCart() {
 // Totals & Display helpers
 // ===============================
 function calculateTotal() {
-  return cart.reduce((sum, item) => {
-    const num = parsePriceToNumber(item.priceText || item.price);
-    const qty = Number(item.quantity || 0);
-    return sum + ( (isNaN(num) ? 0 : num) * qty );
-  }, 0);
+  return calculateBundlePricingSummary().subtotalAfterBundles;
 }
 
 // Apply coupon to a given subtotal (numeric)
@@ -418,6 +555,8 @@ function renderCartPage() {
   // Attempt to support either ID names in your site
   const container = document.getElementById('cartItemsContainer') || document.getElementById('cartItems') || document.getElementById('cartItemsContainer');
   const subtotalEl = document.getElementById('subtotal') || document.getElementById('cartSubtotal') || document.getElementById('subtotalAmount');
+  const bundleDiscountEl = document.getElementById('bundleDiscountAmount');
+  const bundleDiscountRow = document.getElementById('bundleDiscountRow');
   const totalEl = document.getElementById('totalAmount') || document.getElementById('cartTotal') || document.getElementById('cartTotalAmount');
 
   if (!container) return;
@@ -435,6 +574,8 @@ function renderCartPage() {
       </div>
     `;
     if (subtotalEl) subtotalEl.textContent = '₹0';
+    if (bundleDiscountEl) bundleDiscountEl.textContent = '₹0';
+    if (bundleDiscountRow) bundleDiscountRow.style.display = 'none';
     if (totalEl) totalEl.textContent = '₹0';
     // disable checkout button if present
     const checkoutBtn = document.getElementById('checkoutBtn');
@@ -473,10 +614,16 @@ function renderCartPage() {
   container.innerHTML = html;
 
   // Update totals
-  const subtotal = Math.round(calculateTotal());
+  const pricingSummary = calculateBundlePricingSummary();
+  const subtotal = Math.round(pricingSummary.subtotalAfterBundles);
   const { discount, total } = applyCouponToSubtotal(subtotal);
 
-  if (subtotalEl) subtotalEl.textContent = `₹${subtotal.toFixed(0)}`;
+  if (subtotalEl) subtotalEl.textContent = `₹${pricingSummary.regularSubtotal.toFixed(0)}`;
+  if (bundleDiscountEl) bundleDiscountEl.textContent = formatAdjustmentText(pricingSummary.bundleSavings);
+  if (bundleDiscountRow) {
+    bundleDiscountRow.style.display = pricingSummary.bundleSavings !== 0 ? 'flex' : 'none';
+    bundleDiscountRow.title = pricingSummary.appliedBundles.map(bundle => bundle.label).join(', ');
+  }
   if (totalEl) totalEl.textContent = `₹${total.toFixed(0)}`;
 
   const discountEl = document.getElementById('discountAmount');
@@ -570,7 +717,7 @@ async function checkoutWhatsApp() {
   message += `Delivery Address:\n${address}\n\n`;
 
   cart.forEach((item, index) => {
-    const numericPrice = parseFloat(String(item.priceText || item.price).replace(/[^0-9.]/g, '')) || 0;
+    const numericPrice = getCartItemUnitPrice(item);
     const subtotal = (numericPrice * item.quantity).toFixed(0);
 
     message += `${index + 1}. *${item.name}*\n`;
@@ -584,12 +731,8 @@ async function checkoutWhatsApp() {
     message += `   Subtotal: ₹${subtotal}\n\n`;
   });
 
-  const total = cart.reduce((sum, item) => {
-    const num = parseFloat(String(item.priceText || item.price).replace(/[^0-9.]/g, '')) || 0;
-    return sum + num * (item.quantity || 0);
-  }, 0);
-
-  const roundedSubtotal = Math.round(total);
+  const pricingSummary = calculateBundlePricingSummary();
+  const roundedSubtotal = Math.round(pricingSummary.subtotalAfterBundles);
   const { discount, total: finalTotal } = applyCouponToSubtotal(roundedSubtotal);
   const orderId = generateOrderId();
   const orderItems = buildOrderItems();
@@ -600,6 +743,9 @@ async function checkoutWhatsApp() {
     source: 'website',
     customerPhone,
     items: orderItems,
+    regularSubtotal: pricingSummary.regularSubtotal,
+    bundleSavings: pricingSummary.bundleSavings,
+    bundleOffers: pricingSummary.appliedBundles,
     subtotal: roundedSubtotal,
     discount,
     total: Math.round(finalTotal),
@@ -618,7 +764,13 @@ async function checkoutWhatsApp() {
 
   message += `───────────────\n`;
   message += `Order ID: *${orderId}*\n`;
-  message += `Subtotal: ₹${roundedSubtotal.toFixed(0)}\n`;
+  message += `Subtotal: ₹${pricingSummary.regularSubtotal.toFixed(0)}\n`;
+  if (pricingSummary.appliedBundles.length > 0) {
+    pricingSummary.appliedBundles.forEach(bundle => {
+      message += `Bundle Offer (${bundle.label}): ${formatAdjustmentText(bundle.savings)}\n`;
+    });
+    message += `Subtotal after bundles: ₹${roundedSubtotal.toFixed(0)}\n`;
+  }
   if (appliedCoupon && discount > 0) {
     message += `Coupon (${appliedCoupon.code}): -₹${discount.toFixed(0)}\n`;
   }
@@ -869,6 +1021,7 @@ document.addEventListener('DOMContentLoaded', initCartSystem);
 window.cartDebug = {
   viewCart: () => console.table(cart),
   syncPrices: syncCartPrices,
+  calculateBundlePricingSummary,
   clearCart,
   getCart: () => cart,
   saveCart

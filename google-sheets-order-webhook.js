@@ -27,7 +27,10 @@ const HEADERS = [
   'Pincode',
   'Items',
   'Raw JSON',
-  'Customer Phone'
+  'Customer Phone',
+  'Regular Subtotal',
+  'Bundle Savings',
+  'Bundle Offers'
 ];
 
 function doPost(e) {
@@ -52,6 +55,9 @@ function doGet(e) {
       orderId: `TEST-${new Date().getTime()}`,
       status: 'Apps Script test',
       subtotal: 0,
+      regularSubtotal: 0,
+      bundleSavings: 0,
+      bundleOffers: [],
       discount: 0,
       total: 0,
       couponCode: '',
@@ -137,7 +143,10 @@ function appendOrder_(sheet, payload) {
       address.pincode || '',
       items.map(item => `${item.name} (${item.variant || 'default'}) x ${item.quantity}`).join('\n'),
       JSON.stringify(payload),
-      payload.customerPhone || ''
+      payload.customerPhone || '',
+      payload.regularSubtotal || payload.subtotal || 0,
+      payload.bundleSavings || 0,
+      formatBundleOffers_(payload.bundleOffers)
     ]);
 
     SpreadsheetApp.flush();
@@ -167,4 +176,14 @@ function jsonResponse_(body) {
   return ContentService
     .createTextOutput(JSON.stringify(body))
     .setMimeType(ContentService.MimeType.JSON);
+}
+
+function formatBundleOffers_(bundleOffers) {
+  if (!Array.isArray(bundleOffers) || bundleOffers.length === 0) return '';
+
+  return bundleOffers.map(bundle => {
+    const label = bundle.label || bundle.id || 'Bundle offer';
+    const savings = bundle.savings || 0;
+    return `${label} (savings ₹${savings})`;
+  }).join('\n');
 }
